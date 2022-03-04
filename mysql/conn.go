@@ -1,16 +1,19 @@
 package mysql
 
 import (
+	"fmt"
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
+	"jwt-go/config"
 )
 
 var DB *gorm.DB
 
 func init() {
-	dsn := "root:123@tcp(localhost:3306)/jwt-go"
+	mysqlConfig := config.GetMysqlConfig()
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", mysqlConfig.UserName, mysqlConfig.Password, mysqlConfig.Host, mysqlConfig.Ip, mysqlConfig.DBName)
 	DB, _ = gorm.Open("mysql", dsn)
 
 	DB.Debug()

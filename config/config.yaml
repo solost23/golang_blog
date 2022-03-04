@@ -1,0 +1,7 @@
+version: v1.0
+mysql:
+  host: 127.0.0.1
+  ip: 3306
+  username: root
+  password: 123
+  dbname: jwt-go
