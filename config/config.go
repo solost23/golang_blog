@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/spf13/viper"
@@ -36,7 +35,7 @@ func GetMysqlConfig() *Mysql {
 	host := viper.GetStringMapString("mysql")["host"]
 	ip := viper.GetStringMapString("mysql")["ip"]
 	dbname := viper.GetStringMapString("mysql")["dbname"]
-	fmt.Println(username, password, host, ip, dbname)
+	//fmt.Println(username, password, host, ip, dbname)
 	mysql := NewMysql(username, password, host, ip, dbname)
 	return mysql
 }

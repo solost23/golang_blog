@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/pkg/errors"
 	"net/http"
 	"time"
 
@@ -19,6 +20,11 @@ func reg(c echo.Context) error {
 	}
 	var DB = mysql.DB
 	err := workList.NewWorkList(c, DB).Reg(&user)
+
+	if err.Error() == errors.New("user data exist").Error() {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return err
+	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "internal error")
 		return err

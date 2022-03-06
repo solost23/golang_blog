@@ -3,30 +3,15 @@ package workList
 import (
 	"errors"
 
-	"github.com/jinzhu/gorm"
-	"github.com/labstack/echo/v4"
-
 	"jwt-go/common"
 	"jwt-go/model"
 )
 
-type WorkList struct {
-	conn *gorm.DB
-	ctx  echo.Context
-}
-
-func NewWorkList(c echo.Context, conn *gorm.DB) *WorkList {
-	return &WorkList{
-		conn: conn,
-		ctx:  c,
-	}
-}
-
 func (w *WorkList) Reg(user *model.User) error {
 	// 查看用户是否存在
 	// 若存在，则返回错误
-	if err := user.FindByName(user.UserName); err == nil {
-		return err
+	if err := user.FindByName(); err == nil {
+		return errors.New("user data exist")
 	}
 	// 若不存在，则创建
 	if err := user.Create(); err != nil {
@@ -41,7 +26,7 @@ func (w *WorkList) Login(user *model.User) (model.Token, error) {
 	userName := user.UserName
 	password := user.PassWord
 	var token model.Token
-	if err := user.FindByName(user.UserName); err != nil {
+	if err := user.FindByName(); err != nil {
 		return token, err
 	}
 	// 如果有则检查账户名密码

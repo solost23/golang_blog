@@ -9,12 +9,13 @@ import (
 )
 
 type User struct {
-	ID         int32  `gorm:"primary_key"`
-	UserName   string `gorm:"column:user_name" json:"user_name"`
-	PassWord   string `gorm:"column:password" json:"password"`
-	NickName   string `gorm:"column:nick_name" json:"nick_name"`
-	CreateTime int64  `gorm:"column:create_time"`
-	UpdateTime int64  `gorm:"column:update_time"`
+	ID          int32  `gorm:"primary_key"`
+	UserName    string `gorm:"column:user_name" json:"user_name"`
+	PassWord    string `gorm:"column:password" json:"password"`
+	NickName    string `gorm:"column:nick_name" json:"nick_name"`
+	MainPageUrl string `gorm:"column:main_page_url"`
+	CreateTime  int64  `gorm:"column:create_time"`
+	UpdateTime  int64  `gorm:"column:update_time"`
 }
 
 func (u *User) TableName() string {
@@ -56,8 +57,8 @@ func (u *User) FindById() error {
 	return nil
 }
 
-func (u *User) FindByName(userName string) error {
-	if err := DB.Table("user").Where("user_name=?", userName).First(u).Error; err != nil {
+func (u *User) FindByName() error {
+	if err := DB.Table("user").Where("user_name=?", u.UserName).First(u).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return err
 		}

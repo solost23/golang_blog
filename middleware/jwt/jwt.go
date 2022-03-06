@@ -14,6 +14,7 @@ func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
 		cookie, err := c.Cookie("Auth")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, "Cookie err")
+			return err
 		}
 		tknStr := cookie.Value
 		claims := &common.Claims{}
@@ -28,6 +29,7 @@ func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, "token err valid")
 			return err
 		}
+		c.Set("token", claims.UserName)
 		next(c)
 		return nil
 	}
