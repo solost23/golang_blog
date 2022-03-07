@@ -1,0 +1,151 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a blog
+  title: Blog Swagger
+  version: "1.0"
+paths:
+  /article:
+    get:
+      consumes:
+      - application/json
+      description: get all article
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping article
+      tags:
+      - Article
+  /article/{content_name}:
+    get:
+      consumes:
+      - application/json
+      description: create a article
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping article
+      tags:
+      - Article
+  /article/{content_name}/{article_name}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a article
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping article
+      tags:
+      - Article
+    put:
+      consumes:
+      - application/json
+      description: create a article
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping article
+      tags:
+      - Article
+  /article/{user_name}/{content_name}/{article_name}:
+    get:
+      consumes:
+      - application/json
+      description: get a article
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping article
+      tags:
+      - Article
+  /content:
+    delete:
+      consumes:
+      - application/json
+      description: delete a content
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping content
+      tags:
+      - Content
+    get:
+      consumes:
+      - application/json
+      description: get all content
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping content
+      tags:
+      - Content
+    post:
+      consumes:
+      - application/json
+      description: create a content
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping content
+      tags:
+      - Content
+    put:
+      consumes:
+      - application/json
+      description: update a content
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping content
+      tags:
+      - Content
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping user
+      tags:
+      - User
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping user
+      tags:
+      - User
+schemes:
+- http
+- https
+swagger: "2.0"

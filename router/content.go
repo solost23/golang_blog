@@ -9,6 +9,15 @@ import (
 	"net/http"
 )
 
+// PingExample godoc
+// @Summary ping content
+// @Schemes
+// @Description create a content
+// @Tags Content
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /content [post]
 func createContent(c echo.Context) error {
 	//fmt.Println(c.Get("token"))
 	var content model.Content
@@ -25,6 +34,15 @@ func createContent(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping content
+// @Schemes
+// @Description delete a content
+// @Tags Content
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /content [delete]
 func deleteContent(c echo.Context) error {
 	var content model.Content
 	if err := c.Bind(&content); err != nil {
@@ -40,6 +58,15 @@ func deleteContent(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping content
+// @Schemes
+// @Description update a content
+// @Tags Content
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /content [put]
 func updateContent(c echo.Context) error {
 	var content model.Content
 	if err := c.Bind(&content); err != nil {
@@ -56,6 +83,15 @@ func updateContent(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping content
+// @Schemes
+// @Description get all content
+// @Tags Content
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /content [get]
 func getAllContent(c echo.Context) error {
 	var content model.Content
 	var contentList []*model.Content

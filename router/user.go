@@ -12,6 +12,15 @@ import (
 	"jwt-go/workList"
 )
 
+// PingExample godoc
+// @Summary ping user
+// @Schemes
+// @Description do ping
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /user/register [post]
 func reg(c echo.Context) error {
 	var user model.User
 	if err := c.Bind(&user); err != nil {
@@ -33,6 +42,15 @@ func reg(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping user
+// @Schemes
+// @Description do ping
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /user/login [post]
 func login(c echo.Context) error {
 	// 数据绑定
 	var user model.User

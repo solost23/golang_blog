@@ -10,6 +10,12 @@ import (
 	"jwt-go/router"
 )
 
+// @title Blog Swagger
+// @version 1.0
+// @description This is a blog
+// @host localhost:8080
+// @schemes http https
+// @BasePath /
 func main() {
 	var DB = model.DB
 	DB.AutoMigrate(&model.User{})

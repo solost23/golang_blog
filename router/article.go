@@ -10,6 +10,15 @@ import (
 	"jwt-go/workList"
 )
 
+// PingExample godoc
+// @Summary ping article
+// @Schemes
+// @Description create a article
+// @Tags Article
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /article/{content_name} [get]
 func createArticle(c echo.Context) error {
 	contentName := c.Param("content_name")
 	c.Set("content_name", contentName)
@@ -27,6 +36,15 @@ func createArticle(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping article
+// @Schemes
+// @Description delete a article
+// @Tags Article
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /article/{content_name}/{article_name} [delete]
 func deleteArticle(c echo.Context) error {
 	contentName := c.Param("content_name")
 	articleName := c.Param("article_name")
@@ -42,6 +60,15 @@ func deleteArticle(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping article
+// @Schemes
+// @Description create a article
+// @Tags Article
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /article/{content_name}/{article_name} [put]
 func updateArticle(c echo.Context) error {
 	contentName := c.Param("content_name")
 	articleName := c.Param("article_name")
@@ -61,6 +88,15 @@ func updateArticle(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping article
+// @Schemes
+// @Description get all article
+// @Tags Article
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /article [get]
 func getAllArticle(c echo.Context) error {
 	var article model.Article
 	var articleList []*model.Article
@@ -74,6 +110,15 @@ func getAllArticle(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping article
+// @Schemes
+// @Description get a article
+// @Tags Article
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /article/{user_name}/{content_name}/{article_name} [get]
 func getArticle(c echo.Context) error {
 	userName := c.Param("user_name")
 	contentName := c.Param("content_name")
