@@ -44,3 +44,32 @@ func (w *WorkList) Login(user *model.User) (model.Token, error) {
 	}
 	return token, nil
 }
+
+func (w *WorkList) UpdateUser(user *model.User) error {
+	// 通过用户名查出来用户id
+	var tmpUser model.User
+	tmpUser.UserName = user.UserName
+	if err := tmpUser.FindByName(); err != nil {
+		return err
+	}
+	// 通过用户id更新用户信息
+	user.ID = tmpUser.ID
+	if err := user.Update(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (w *WorkList) DeleteUser(user *model.User) error {
+	userName := w.ctx.Get("user_name").(string)
+	// 通过用户名获取用户ID
+	user.UserName = userName
+	if err := user.FindByName(); err != nil {
+		return err
+	}
+	// 删除用户
+	if err := user.Delete(); err != nil {
+		return err
+	}
+	return nil
+}

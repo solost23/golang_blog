@@ -188,9 +188,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/login": {
+        "/login": {
             "post": {
-                "description": "do ping",
+                "description": "login",
                 "consumes": [
                     "application/json"
                 ],
@@ -208,9 +208,47 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/register": {
+        "/register": {
             "post": {
-                "description": "do ping",
+                "description": "register",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "ping user",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/user/{user_name}": {
+            "put": {
+                "description": "update user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "ping user",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete user",
                 "consumes": [
                     "application/json"
                 ],

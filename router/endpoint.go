@@ -10,18 +10,26 @@ import (
 )
 
 func RegisterNoAuth(group *echo.Group) {
-	user := group.Group("/user")
-	{
-		user.POST("/register", reg)
-		user.POST("/login", login)
-	}
+	group.POST("/register", reg)
+	group.POST("/login", login)
 }
 
 func RegisterAuth(group *echo.Group) {
 	group.Use(jwt.JWTAuth)
 
+	RegisterUser(group)
 	RegisterArticle(group)
 	RegisterContent(group)
+}
+
+func RegisterUser(group *echo.Group) {
+	user := group.Group("/user")
+	{
+		// 修改用户信息
+		user.PUT("/:user_name", updateUser)
+		// 删除用户信息(注销)
+		user.DELETE("/:user_name", deleteUser)
+	}
 }
 
 func RegisterArticle(group *echo.Group) {
@@ -49,7 +57,7 @@ func RegisterContent(group *echo.Group) {
 func Register() *echo.Echo {
 	router := echo.New()
 	// , middleware.Recover()
-	router.Use(middleware.Logger())
+	router.Use(middleware.Logger(), middleware.Recover())
 
 	group := router.Group("")
 	RegisterNoAuth(group)

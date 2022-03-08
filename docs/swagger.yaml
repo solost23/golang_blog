@@ -119,11 +119,11 @@ paths:
       summary: ping content
       tags:
       - Content
-  /user/login:
+  /login:
     post:
       consumes:
       - application/json
-      description: do ping
+      description: login
       produces:
       - application/json
       responses:
@@ -132,11 +132,36 @@ paths:
       summary: ping user
       tags:
       - User
-  /user/register:
+  /register:
     post:
       consumes:
       - application/json
-      description: do ping
+      description: register
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping user
+      tags:
+      - User
+  /user/{user_name}:
+    delete:
+      consumes:
+      - application/json
+      description: delete user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping user
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: update user
       produces:
       - application/json
       responses:

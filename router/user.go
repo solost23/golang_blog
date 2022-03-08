@@ -15,12 +15,12 @@ import (
 // PingExample godoc
 // @Summary ping user
 // @Schemes
-// @Description do ping
+// @Description register
 // @Tags User
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /user/register [post]
+// @Router /register [post]
 func reg(c echo.Context) error {
 	var user model.User
 	if err := c.Bind(&user); err != nil {
@@ -41,12 +41,12 @@ func reg(c echo.Context) error {
 // PingExample godoc
 // @Summary ping user
 // @Schemes
-// @Description do ping
+// @Description login
 // @Tags User
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /user/login [post]
+// @Router /login [post]
 func login(c echo.Context) error {
 	// 数据绑定
 	var user model.User
@@ -67,5 +67,53 @@ func login(c echo.Context) error {
 	}
 	c.SetCookie(cookie)
 	c.JSON(http.StatusOK, token)
+	return nil
+}
+
+// PingExample godoc
+// @Summary ping user
+// @Schemes
+// @Description update user
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /user/{user_name} [put]
+func updateUser(c echo.Context) error {
+	userName := c.Param("user_name")
+	c.Set("user_name", userName)
+	var user model.User
+	if err := c.Bind(&user); err != nil {
+		c.JSON(http.StatusBadRequest, "request data err")
+		return err
+	}
+	var DB = mysql.DB
+	if err := workList.NewWorkList(c, DB).UpdateUser(&user); err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return err
+	}
+	c.JSON(http.StatusOK, user)
+	return nil
+}
+
+// PingExample godoc
+// @Summary ping user
+// @Schemes
+// @Description delete user
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /user/{user_name} [delete]
+func deleteUser(c echo.Context) error {
+	userName := c.Param("user_name")
+	c.Set("user_name", userName)
+	var user model.User
+	var DB = mysql.DB
+	if err := workList.NewWorkList(c, DB).DeleteUser(&user); err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return err
+	}
+	c.JSON(http.StatusOK, "user delete success")
 	return nil
 }
