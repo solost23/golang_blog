@@ -2,7 +2,6 @@ package workList
 
 import (
 	"errors"
-
 	"golang_blog/common"
 	"golang_blog/model"
 )
@@ -14,6 +13,7 @@ func (w *WorkList) Reg(user *model.User) error {
 		return errors.New("user data exist")
 	}
 	// 若不存在，则创建
+	user.PassWord = common.NewMd5(user.PassWord, "ty")
 	if err := user.Create(); err != nil {
 		return err
 	}
@@ -31,7 +31,7 @@ func (w *WorkList) Login(user *model.User) (model.Token, error) {
 	}
 	// 如果有则检查账户名密码
 	// 如果账户名 || 密码错误，返回错误
-	if userName != user.UserName || password != user.PassWord {
+	if userName != user.UserName || common.NewMd5(password, "ty") != user.PassWord {
 		return token, errors.New("username or password failed")
 	}
 	// 否则生成一个 token

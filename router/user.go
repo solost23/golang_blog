@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"time"
 
@@ -29,13 +29,9 @@ func reg(c echo.Context) error {
 	}
 	var DB = mysql.DB
 	err := workList.NewWorkList(c, DB).Reg(&user)
-
-	if err.Error() == errors.New("user data exist").Error() {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return err
-	}
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "internal error")
+		log.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
 		return err
 	}
 	c.JSON(http.StatusOK, user)
@@ -61,7 +57,7 @@ func login(c echo.Context) error {
 	var DB = mysql.DB
 	token, err := workList.NewWorkList(c, DB).Login(&user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		c.JSON(http.StatusInternalServerError, err.Error())
 		return err
 	}
 	cookie := &http.Cookie{
