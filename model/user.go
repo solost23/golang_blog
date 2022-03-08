@@ -5,7 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 
-	"jwt-go/mysql"
+	"golang_blog/mysql"
 )
 
 type User struct {

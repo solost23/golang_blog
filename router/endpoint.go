@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/swaggo/echo-swagger"
 
-	_ "jwt-go/docs" // 一定要导入docs，否则会报内部错误
-	"jwt-go/middleware/jwt"
+	_ "golang_blog/docs" // 一定要导入docs，否则会报内部错误
+	"golang_blog/middleware/jwt"
 )
 
 func RegisterNoAuth(group *echo.Group) {

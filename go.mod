@@ -1,4 +1,4 @@
-module jwt-go
+module golang_blog
 
 go 1.17
 

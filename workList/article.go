@@ -2,7 +2,8 @@ package workList
 
 import (
 	"errors"
-	"jwt-go/model"
+
+	"golang_blog/model"
 )
 
 func (w *WorkList) CreateArticle(article *model.Article) error {

@@ -6,7 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 
-	"jwt-go/common"
+	"golang_blog/common"
 )
 
 func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {

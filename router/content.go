@@ -3,9 +3,9 @@ package router
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"jwt-go/model"
-	"jwt-go/mysql"
-	"jwt-go/workList"
+	"golang_blog/model"
+	"golang_blog/mysql"
+	"golang_blog/workList"
 	"net/http"
 )
 

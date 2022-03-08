@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"jwt-go/model"
-	"jwt-go/router"
+	"golang_blog/model"
+	"golang_blog/router"
 )
 
 // @title Blog Swagger

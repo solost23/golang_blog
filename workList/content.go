@@ -3,8 +3,9 @@ package workList
 import (
 	"errors"
 	"fmt"
-	"jwt-go/model"
 	"log"
+
+	"golang_blog/model"
 )
 
 func (w *WorkList) CreateContent(content *model.Content) error {

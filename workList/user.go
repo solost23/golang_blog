@@ -3,8 +3,8 @@ package workList
 import (
 	"errors"
 
-	"jwt-go/common"
-	"jwt-go/model"
+	"golang_blog/common"
+	"golang_blog/model"
 )
 
 func (w *WorkList) Reg(user *model.User) error {
