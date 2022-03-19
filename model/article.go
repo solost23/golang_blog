@@ -34,7 +34,7 @@ func (a *Article) Delete() error {
 
 func (a *Article) Update() error {
 	a.UpdateTime = time.Now().Unix()
-	if err := DB.Table("article").Where("id=?", a.ID).Update(a).Error; err != nil {
+	if err := DB.Table("article").Omit("id", "content_id", "user_id").Where("id=?", a.ID).Save(a).Error; err != nil {
 		return err
 	}
 	return nil

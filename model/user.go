@@ -3,7 +3,7 @@ package model
 import (
 	"time"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	"golang_blog/mysql"
 )
@@ -42,7 +42,7 @@ func (u *User) Delete() error {
 
 func (u *User) Update() error {
 	u.UpdateTime = time.Now().Unix()
-	if err := DB.Table("user").Where("id=?", u.ID).Update(u).Error; err != nil {
+	if err := DB.Table("user").Omit("id", "password").Where("id=?", u.ID).Save(u).Error; err != nil {
 		return err
 	}
 	return nil

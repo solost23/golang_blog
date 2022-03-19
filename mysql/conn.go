@@ -2,10 +2,10 @@ package mysql
 
 import (
 	"fmt"
-	"log"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
 	"golang_blog/config"
 )
 
@@ -14,12 +14,9 @@ var DB *gorm.DB
 func init() {
 	mysqlConfig := config.GetMysqlConfig()
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", mysqlConfig.UserName, mysqlConfig.Password, mysqlConfig.Host, mysqlConfig.Ip, mysqlConfig.DBName)
-	DB, _ = gorm.Open("mysql", dsn)
-
-	DB.Debug()
-	DB.LogMode(true)
-
-	if err := DB.DB().Ping(); err != nil {
-		log.Fatalln(err)
+	dbConn, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Error)})
+	if err != nil {
+		panic(err)
 	}
+	DB = dbConn
 }

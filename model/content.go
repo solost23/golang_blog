@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type Content struct {
@@ -38,7 +38,7 @@ func (c *Content) Delete() error {
 
 func (c *Content) Update() error {
 	c.UpdateTime = time.Now().Unix()
-	if err := DB.Table("content").Where("id=?", c.ID).Update(c).Error; err != nil {
+	if err := DB.Table("content").Omit("id", "user_id").Where("id=?", c.ID).Save(c).Error; err != nil {
 		return err
 	}
 	return nil

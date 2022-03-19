@@ -1,8 +1,8 @@
 package workList
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
 type WorkList struct {

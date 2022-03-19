@@ -1,7 +1,7 @@
 package workList
 
 import (
-	"jwt-go/model"
+	"golang_blog/model"
 	"log"
 	"testing"
 )
