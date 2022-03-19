@@ -18,17 +18,26 @@ import (
 // @BasePath /
 func main() {
 	var DB = model.DB
-	DB.AutoMigrate(&model.User{})
-	DB.AutoMigrate(&model.Content{})
-	DB.AutoMigrate(&model.Article{})
+	if err := DB.AutoMigrate(&model.User{}); err != nil {
+		panic(err.Error())
+	}
+	if err := DB.AutoMigrate(&model.Content{}); err != nil {
+		panic(err.Error())
+	}
+	if err := DB.AutoMigrate(&model.Article{}); err != nil {
+		panic(err.Error())
+	}
+	if err := DB.AutoMigrate(&model.Comment{}); err != nil {
+		panic(err.Error())
+	}
 	s := &http.Server{
 		Addr:         "localhost:8080",
 		Handler:      router.Register(),
 		WriteTimeout: 30 * time.Second,
 		ReadTimeout:  30 * time.Second,
 	}
-	fmt.Printf("博客服务开启, 服务地址:%s", "localhost:8080")
+	fmt.Printf("博客服务开启, 服务地址:%s", "localhost:8080 \n")
 	if err := s.ListenAndServe(); err != nil {
-		log.Fatalln(err)
+		log.Fatalln(err.Error())
 	}
 }

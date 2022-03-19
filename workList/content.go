@@ -14,6 +14,7 @@ func (w *WorkList) CreateContent(content *model.Content) error {
 	user.UserName = w.ctx.Get("token").(string)
 	fmt.Println(user)
 	if err := user.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 将用户id给到content.user_id
@@ -24,7 +25,8 @@ func (w *WorkList) CreateContent(content *model.Content) error {
 	}
 	// 若存在，则创建分类
 	if err := content.Create(); err != nil {
-		return nil
+		fmt.Println(err.Error())
+		return err
 	}
 	return nil
 }
@@ -34,6 +36,7 @@ func (w *WorkList) DeleteContent(content *model.Content) error {
 	var user model.User
 	user.UserName = w.ctx.Get("token").(string)
 	if err := user.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 将用户id给到content.user_id
@@ -41,10 +44,12 @@ func (w *WorkList) DeleteContent(content *model.Content) error {
 	// 查询此分类是否存在
 	// 若不存在，则返回错误
 	if err := content.FindByUserIdAndContentName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	//若存在，则删除
 	if err := content.Delete(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil
@@ -54,17 +59,20 @@ func (w *WorkList) UpdateContent(content *model.Content) error {
 	var user model.User
 	user.UserName = w.ctx.Get("token").(string)
 	if err := user.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	var tmpContent model.Content
 	tmpContent.UserID = user.ID
 	tmpContent.ContentName = content.ContentName
 	if err := tmpContent.FindByUserIdAndContentName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 
 	content.ID = tmpContent.ID
 	if err := content.Update(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil
@@ -75,6 +83,7 @@ func (w *WorkList) GetAllContent(content *model.Content) ([]*model.Content, erro
 	log.Println("in content DB")
 	contentList, err := content.Find()
 	if err != nil {
+		fmt.Println(err.Error())
 		return contentList, err
 	}
 	return contentList, err

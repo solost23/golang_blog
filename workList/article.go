@@ -2,6 +2,7 @@ package workList
 
 import (
 	"errors"
+	"fmt"
 
 	"golang_blog/model"
 )
@@ -14,6 +15,7 @@ func (w *WorkList) CreateArticle(article *model.Article) error {
 	var user model.User
 	user.UserName = userName
 	if err := user.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 获取分类名
@@ -22,6 +24,7 @@ func (w *WorkList) CreateArticle(article *model.Article) error {
 	content.UserID = user.ID
 	content.ContentName = contentName
 	if err := content.FindByUserIdAndContentName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 查询有无此文章
@@ -32,6 +35,7 @@ func (w *WorkList) CreateArticle(article *model.Article) error {
 	}
 	// 若没有，则插入文章
 	if err := article.Create(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil
@@ -46,6 +50,7 @@ func (w *WorkList) DeleteArticle(article *model.Article) error {
 	var user model.User
 	user.UserName = userName
 	if err := user.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 查询分类是否存在
@@ -53,6 +58,7 @@ func (w *WorkList) DeleteArticle(article *model.Article) error {
 	content.UserID = user.ID
 	content.ContentName = contentName
 	if err := content.FindByNameAndUserId(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 从文章表中查询文章是否存在
@@ -60,10 +66,12 @@ func (w *WorkList) DeleteArticle(article *model.Article) error {
 	article.ContentID = content.ID
 	article.ArticleName = articleName
 	if err := article.FindByUserIdAndContentIdAndArticleName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 通过文章id删除文章
 	if err := article.Delete(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil
@@ -76,12 +84,14 @@ func (w *WorkList) UpdateArticle(article *model.Article) error {
 	var user model.User
 	user.UserName = userName
 	if err := user.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	var content model.Content
 	content.UserID = user.ID
 	content.ContentName = contentName
 	if err := content.FindByNameAndUserId(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	var tmpArticle model.Article
@@ -89,6 +99,7 @@ func (w *WorkList) UpdateArticle(article *model.Article) error {
 	tmpArticle.ContentID = content.ID
 	tmpArticle.ArticleName = articleName
 	if err := tmpArticle.FindByUserIdAndContentIdAndArticleName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 
@@ -96,6 +107,7 @@ func (w *WorkList) UpdateArticle(article *model.Article) error {
 	article.UserID = user.ID
 	article.ContentID = content.ID
 	if err := article.Update(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil
@@ -105,6 +117,7 @@ func (w *WorkList) GetAllArticle(article *model.Article) ([]*model.Article, erro
 	// 直接查询
 	articleList, err := article.Find()
 	if err != nil {
+		fmt.Println(err.Error())
 		return articleList, err
 	}
 	return articleList, nil
@@ -118,6 +131,7 @@ func (w *WorkList) GetArticle(article *model.Article) error {
 	var user model.User
 	user.UserName = userName
 	if err := user.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 通过contentName And Userid 查找到content.id
@@ -125,6 +139,7 @@ func (w *WorkList) GetArticle(article *model.Article) error {
 	content.UserID = user.ID
 	content.ContentName = contentName
 	if err := content.FindByNameAndUserId(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	article.UserID = user.ID
@@ -132,6 +147,7 @@ func (w *WorkList) GetArticle(article *model.Article) error {
 	article.ArticleName = articleName
 	// 通过userid 和分类名字和文章名字去查询文章内容
 	if err := article.FindByUserIdAndContentIdAndArticleName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil

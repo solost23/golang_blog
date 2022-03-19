@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/jinzhu/gorm v1.9.16
 	github.com/labstack/echo/v4 v4.7.0
 	github.com/spf13/viper v1.10.1
 	github.com/swaggo/echo-swagger v1.3.0

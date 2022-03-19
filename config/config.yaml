@@ -4,4 +4,4 @@ mysql:
   ip: 3306
   username: root
   password: 123
-  dbname: jwt-go
+  dbname: golang_blog

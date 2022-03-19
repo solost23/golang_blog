@@ -2,6 +2,8 @@ package workList
 
 import (
 	"errors"
+	"fmt"
+
 	"golang_blog/common"
 	"golang_blog/model"
 )
@@ -15,6 +17,7 @@ func (w *WorkList) Reg(user *model.User) error {
 	// 若不存在，则创建
 	user.PassWord = common.NewMd5(user.PassWord, "ty")
 	if err := user.Create(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil
@@ -27,6 +30,7 @@ func (w *WorkList) Login(user *model.User) (model.Token, error) {
 	password := user.PassWord
 	var token model.Token
 	if err := user.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return token, err
 	}
 	// 如果有则检查账户名密码
@@ -37,6 +41,7 @@ func (w *WorkList) Login(user *model.User) (model.Token, error) {
 	// 否则生成一个 token
 	tokenString, err := common.CreateToken(userName)
 	if err != nil {
+		fmt.Println(err.Error())
 		return token, err
 	}
 	token = model.Token{
@@ -50,11 +55,13 @@ func (w *WorkList) UpdateUser(user *model.User) error {
 	var tmpUser model.User
 	tmpUser.UserName = user.UserName
 	if err := tmpUser.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 通过用户id更新用户信息
 	user.ID = tmpUser.ID
 	if err := user.Update(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil
@@ -65,10 +72,12 @@ func (w *WorkList) DeleteUser(user *model.User) error {
 	// 通过用户名获取用户ID
 	user.UserName = userName
 	if err := user.FindByName(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	// 删除用户
 	if err := user.Delete(); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil

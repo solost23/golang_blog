@@ -70,6 +70,45 @@ paths:
       summary: ping article
       tags:
       - Article
+  /comment/{article_id}:
+    get:
+      consumes:
+      - application/json
+      description: get all comment
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping comment
+      tags:
+      - Comment
+  /comment/{comment_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a comment
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping comment
+      tags:
+      - Comment
+  /comment/{user_name}/{article_id}/{parent_id}:
+    post:
+      consumes:
+      - application/json
+      description: create a comment
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping comment
+      tags:
+      - Comment
   /content:
     delete:
       consumes:
