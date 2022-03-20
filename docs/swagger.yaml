@@ -210,6 +210,56 @@ paths:
       summary: ping user
       tags:
       - User
+  /role:
+    delete:
+      consumes:
+      - application/json
+      description: delete roleAuth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping role
+      tags:
+      - Role
+    get:
+      consumes:
+      - application/json
+      description: get all roleAuth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping role
+      tags:
+      - Role
+    post:
+      consumes:
+      - application/json
+      description: add roleAuth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping role
+      tags:
+      - Role
+  /role/{role_name}:
+    get:
+      consumes:
+      - application/json
+      description: get roleAuth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping role
+      tags:
+      - Role
   /user/{user_name}:
     delete:
       consumes:

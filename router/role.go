@@ -10,6 +10,15 @@ import (
 	"golang_blog/workList"
 )
 
+// PingExample godoc
+// @Summary ping role
+// @Schemes
+// @Description add roleAuth
+// @Tags Role
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /role [post]
 func addRoleAuth(c echo.Context) error {
 	var casbinModel = new(model.CasbinModel)
 	if err := c.Bind(casbinModel); err != nil {
@@ -25,6 +34,15 @@ func addRoleAuth(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping role
+// @Schemes
+// @Description delete roleAuth
+// @Tags Role
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /role [delete]
 func deleteRoleAuth(c echo.Context) error {
 	var casbinModel = new(model.CasbinModel)
 	if err := c.Bind(casbinModel); err != nil {
@@ -40,6 +58,15 @@ func deleteRoleAuth(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping role
+// @Schemes
+// @Description get all roleAuth
+// @Tags Role
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /role [get]
 func getAllRoleAuth(c echo.Context) error {
 	var casbinModel = new(model.CasbinModel)
 	var DB = mysql.DB
@@ -51,6 +78,15 @@ func getAllRoleAuth(c echo.Context) error {
 	return nil
 }
 
+// PingExample godoc
+// @Summary ping role
+// @Schemes
+// @Description get roleAuth
+// @Tags Role
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /role/{role_name} [get]
 func getRoleAuth(c echo.Context) error {
 	roleName := c.Param("role_name")
 	c.Set("role_name", roleName)
