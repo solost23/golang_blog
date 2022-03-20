@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/swaggo/echo-swagger"
+	"golang_blog/middleware/role"
 
 	_ "golang_blog/docs" // 一定要导入docs，否则会报内部错误
 	"golang_blog/middleware/jwt"
@@ -16,11 +17,13 @@ func RegisterNoAuth(group *echo.Group) {
 
 func RegisterAuth(group *echo.Group) {
 	group.Use(jwt.JWTAuth)
-
 	RegisterUser(group)
 	RegisterArticle(group)
 	RegisterContent(group)
 	RegisterComment(group)
+
+	group.Use(role.AuthCheckRole)
+	RegisterRole(group)
 	RegisterLog(group)
 }
 
@@ -29,7 +32,7 @@ func RegisterUser(group *echo.Group) {
 	{
 		// 修改用户信息
 		user.PUT("/:user_name", updateUser)
-		// 删除用户信息(注销)
+		// 删除用户信息
 		user.DELETE("/:user_name", deleteUser)
 	}
 }
@@ -70,6 +73,16 @@ func RegisterLog(group *echo.Group) {
 	{
 		log.GET("", getAllLog)
 		log.DELETE("/:log_id", deleteLog)
+	}
+}
+
+func RegisterRole(group *echo.Group) {
+	role := group.Group("/role")
+	{
+		role.POST("", addRoleAuth)
+		role.DELETE("", deleteRoleAuth)
+		role.GET("", getAllRoleAuth)
+		role.GET("/:role_name", getRoleAuth)
 	}
 }
 

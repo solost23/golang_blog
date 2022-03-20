@@ -32,7 +32,7 @@ func createArticle(c echo.Context) error {
 		c.JSON(http.StatusInternalServerError, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "article create success")
+	c.JSON(http.StatusOK, article)
 	return nil
 }
 
@@ -84,7 +84,7 @@ func updateArticle(c echo.Context) error {
 		c.JSON(http.StatusInternalServerError, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "article update success")
+	c.JSON(http.StatusOK, article)
 	return nil
 }
 

@@ -10,6 +10,7 @@ import (
 )
 
 var DB *gorm.DB
+var DBCasbin *gorm.DB
 
 func init() {
 	mysqlConfig := config.GetMysqlConfig()
@@ -18,5 +19,11 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	dsnCasbin := fmt.Sprintf("%s:%s@tcp(%s:%s)/casbin", mysqlConfig.UserName, mysqlConfig.Password, mysqlConfig.Host, mysqlConfig.Ip)
+	dbConn1, err := gorm.Open(mysql.Open(dsnCasbin), &gorm.Config{Logger: logger.Default.LogMode(logger.Error)})
+	if err != nil {
+		panic(err)
+	}
 	DB = dbConn
+	DBCasbin = dbConn1
 }

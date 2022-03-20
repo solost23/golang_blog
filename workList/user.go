@@ -3,6 +3,7 @@ package workList
 import (
 	"errors"
 	"fmt"
+	"gorm.io/gorm"
 
 	"golang_blog/common"
 	"golang_blog/model"
@@ -31,6 +32,7 @@ func (w *WorkList) Login(user *model.User) (model.Token, error) {
 	// 查看有无用户
 	// 如果没有直接报错
 	userName := user.UserName
+	role := user.Role
 	password := user.PassWord
 	var token model.Token
 	if err := user.FindByName(); err != nil {
@@ -43,7 +45,7 @@ func (w *WorkList) Login(user *model.User) (model.Token, error) {
 		return token, errors.New("username or password failed")
 	}
 	// 否则生成一个 token
-	tokenString, err := common.CreateToken(userName)
+	tokenString, err := common.CreateToken(userName, role)
 	if err != nil {
 		fmt.Println(err.Error())
 		return token, err
@@ -60,6 +62,9 @@ func (w *WorkList) UpdateUser(user *model.User) error {
 	tmpUser.UserName = user.UserName
 	if err := tmpUser.FindByName(); err != nil {
 		fmt.Println(err.Error())
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return err
+		}
 		return err
 	}
 	// 通过用户id更新用户信息

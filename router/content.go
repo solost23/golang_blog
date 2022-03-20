@@ -30,7 +30,7 @@ func createContent(c echo.Context) error {
 		c.JSON(http.StatusInternalServerError, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "content create success")
+	c.JSON(http.StatusOK, content)
 	return nil
 }
 
@@ -79,7 +79,7 @@ func updateContent(c echo.Context) error {
 		c.JSON(http.StatusInternalServerError, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "content update success")
+	c.JSON(http.StatusOK, content)
 	return nil
 }
 

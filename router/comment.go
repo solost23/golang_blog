@@ -60,7 +60,7 @@ func createComment(c echo.Context) error {
 		c.JSON(http.StatusInternalServerError, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "create comment success")
+	c.JSON(http.StatusOK, comment)
 	return nil
 }
 

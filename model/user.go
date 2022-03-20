@@ -11,6 +11,7 @@ import (
 type User struct {
 	ID          int32  `gorm:"primary_key"`
 	UserName    string `gorm:"column:user_name" json:"user_name"`
+	Role        string `gorm:"column:role;type:enum('ADMIN','USER');default:USER" json:"role"`
 	PassWord    string `gorm:"column:password" json:"password"`
 	NickName    string `gorm:"column:nick_name" json:"nick_name"`
 	MainPageUrl string `gorm:"column:main_page_url"`
@@ -23,6 +24,7 @@ func (u *User) TableName() string {
 }
 
 var DB *gorm.DB = mysql.DB
+var DBCasbin *gorm.DB = mysql.DBCasbin
 
 func (u *User) Create() error {
 	u.CreateTime = time.Now().Unix()

@@ -30,6 +30,7 @@ func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
 			return err
 		}
 		c.Set("token", claims.UserName)
+		c.Set("claims", claims)
 		next(c)
 		return nil
 	}
