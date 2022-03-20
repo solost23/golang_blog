@@ -30,6 +30,9 @@ func main() {
 	if err := DB.AutoMigrate(&model.Comment{}); err != nil {
 		panic(err.Error())
 	}
+	if err := DB.AutoMigrate(&model.Log{}); err != nil {
+		panic(err.Error())
+	}
 	s := &http.Server{
 		Addr:         "localhost:8080",
 		Handler:      router.Register(),

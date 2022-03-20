@@ -158,6 +158,32 @@ paths:
       summary: ping content
       tags:
       - Content
+  /log:
+    get:
+      consumes:
+      - application/json
+      description: get all log
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping log
+      tags:
+      - Log
+  /log/{log_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a log
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: ping log
+      tags:
+      - Log
   /login:
     post:
       consumes:

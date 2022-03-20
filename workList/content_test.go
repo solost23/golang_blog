@@ -1,9 +1,10 @@
 package workList
 
 import (
-	"golang_blog/model"
 	"log"
 	"testing"
+
+	"golang_blog/model"
 )
 
 func TestWorkList_GetAllContent(t *testing.T) {

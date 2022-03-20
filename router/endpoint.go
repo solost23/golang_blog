@@ -21,6 +21,7 @@ func RegisterAuth(group *echo.Group) {
 	RegisterArticle(group)
 	RegisterContent(group)
 	RegisterComment(group)
+	RegisterLog(group)
 }
 
 func RegisterUser(group *echo.Group) {
@@ -61,6 +62,14 @@ func RegisterComment(group *echo.Group) {
 		comment.GET("/:article_id", getAllComment)
 		comment.POST("/:user_name/:article_id/:parent_id", createComment)
 		comment.DELETE("/:user_name/:comment_id", deleteComment)
+	}
+}
+
+func RegisterLog(group *echo.Group) {
+	log := group.Group("/log")
+	{
+		log.GET("", getAllLog)
+		log.DELETE("/:log_id", deleteLog)
 	}
 }
 

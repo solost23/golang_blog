@@ -38,6 +38,9 @@ func (w *WorkList) CreateArticle(article *model.Article) error {
 		fmt.Println(err.Error())
 		return err
 	}
+	if err := w.CreateLog(userName, INSERT, ARTICLE, article.ArticleName, SUCCESS); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -74,6 +77,9 @@ func (w *WorkList) DeleteArticle(article *model.Article) error {
 		fmt.Println(err.Error())
 		return err
 	}
+	if err := w.CreateLog(userName, DELETE, ARTICLE, article.ArticleName, SUCCESS); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -108,6 +114,9 @@ func (w *WorkList) UpdateArticle(article *model.Article) error {
 	article.ContentID = content.ID
 	if err := article.Update(); err != nil {
 		fmt.Println(err.Error())
+		return err
+	}
+	if err := w.CreateLog(userName, UPDATE, ARTICLE, article.ArticleName, SUCCESS); err != nil {
 		return err
 	}
 	return nil
