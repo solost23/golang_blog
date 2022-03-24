@@ -17,6 +17,7 @@ import (
 // @schemes http https
 // @BasePath /
 func main() {
+	fmt.Println("准备连接数据库")
 	var DB = model.DB
 	if err := DB.AutoMigrate(&model.User{}); err != nil {
 		panic(err.Error())
@@ -34,12 +35,12 @@ func main() {
 		panic(err.Error())
 	}
 	s := &http.Server{
-		Addr:         "localhost:8080",
+		Addr:         "0.0.0.0:8080",
 		Handler:      router.Register(),
 		WriteTimeout: 30 * time.Second,
 		ReadTimeout:  30 * time.Second,
 	}
-	fmt.Printf("博客服务开启, 服务地址:%s", "localhost:8080 \n")
+	fmt.Printf("博客服务开启, 服务地址:%s", "0.0.0.0:8080 \n")
 	if err := s.ListenAndServe(); err != nil {
 		log.Fatalln(err.Error())
 	}

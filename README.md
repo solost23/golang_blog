@@ -16,3 +16,13 @@
 
 ## 访问接口文档
 http://127.0.0.1:8080/swagger/index.html
+
+## docker 部署方式
+
+```shell
+docker build -t golang_blog .
+```
+
+```shell
+docker run -d --rm -p 8080:8080 --name golang_blog_project --link MySQL:mysqldb golang_blog
+```

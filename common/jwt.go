@@ -29,5 +29,4 @@ func CreateToken(userName, role string) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
-
 }
