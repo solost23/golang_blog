@@ -10,11 +10,10 @@ import (
 	"golang_blog/workList"
 )
 
-// PingExample godoc
-// @Summary ping comment
-// @Schemes
+// @Summary get_all_comment
 // @Description get all comment
 // @Tags Comment
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200
@@ -34,11 +33,11 @@ func getAllComment(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping comment
-// @Schemes
-// @Description create a comment
+// @Summary create_comment
+// @Description create comment
 // @Tags Comment
+// @Security ApiKeyAuth
+// @Param data body model.Comment true "评论"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -64,11 +63,10 @@ func createComment(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping comment
-// @Schemes
-// @Description delete a comment
+// @Summary delete comment
+// @Description delete comment
 // @Tags Comment
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200

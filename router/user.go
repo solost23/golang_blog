@@ -12,11 +12,11 @@ import (
 	"golang_blog/workList"
 )
 
-// PingExample godoc
-// @Summary ping user
-// @Schemes
+// @Summary register
 // @Description register
 // @Tags User
+// @Security ApiKeyAuth
+// @Param data body model.User true "用户"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -38,11 +38,11 @@ func reg(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping user
-// @Schemes
+// @Summary login
 // @Description login
 // @Tags User
+// @Security ApiKeyAuth
+// @Param data body model.User true "用户"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -70,11 +70,11 @@ func login(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping user
-// @Schemes
+// @Summary update_user
 // @Description update user
 // @Tags User
+// @Security ApiKeyAuth
+// @Param data body model.User true "用户"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -96,11 +96,10 @@ func updateUser(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping user
-// @Schemes
+// @Summary delete_user
 // @Description delete user
 // @Tags User
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200

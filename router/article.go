@@ -10,11 +10,11 @@ import (
 	"golang_blog/workList"
 )
 
-// PingExample godoc
-// @Summary ping article
-// @Schemes
-// @Description create a article
+// @Summary create_article
+// @Description create article
 // @Tags Article
+// @Security ApiKeyAuth
+// @Param data body model.Article true "文章"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -36,11 +36,10 @@ func createArticle(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping article
-// @Schemes
-// @Description delete a article
+// @Summary delete_article
+// @Description delete article
 // @Tags Article
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200
@@ -60,11 +59,11 @@ func deleteArticle(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping article
-// @Schemes
-// @Description create a article
+// @Summary update_article
+// @Description update article
 // @Tags Article
+// @Security ApiKeyAuth
+// @Param data body model.Article true "文章"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -88,11 +87,10 @@ func updateArticle(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping article
-// @Schemes
+// @Summary get_all_article
 // @Description get all article
 // @Tags Article
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200
@@ -110,11 +108,10 @@ func getAllArticle(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping article
-// @Schemes
-// @Description get a article
+// @Summary get article
+// @Description get article
 // @Tags Article
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200

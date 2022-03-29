@@ -10,11 +10,11 @@ import (
 	"golang_blog/workList"
 )
 
-// PingExample godoc
-// @Summary ping role
-// @Schemes
-// @Description add roleAuth
+// @Summary create roleAuth
+// @Description create roleAuth
 // @Tags Role
+// @Security ApiKeyAuth
+// @Param data body model.CasbinModel true "角色权限"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -34,11 +34,10 @@ func addRoleAuth(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping role
-// @Schemes
+// @Summary delete roleAuth
 // @Description delete roleAuth
 // @Tags Role
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200
@@ -58,11 +57,10 @@ func deleteRoleAuth(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping role
-// @Schemes
+// @Summary get_all_roleAuth
 // @Description get all roleAuth
 // @Tags Role
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200
@@ -78,11 +76,10 @@ func getAllRoleAuth(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping role
-// @Schemes
+// @Summary get_roleAuth
 // @Description get roleAuth
 // @Tags Role
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200

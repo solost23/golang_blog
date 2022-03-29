@@ -9,11 +9,11 @@ import (
 	"net/http"
 )
 
-// PingExample godoc
-// @Summary ping content
-// @Schemes
+// @Summary create content
 // @Description create a content
 // @Tags Content
+// @Security ApiKeyAuth
+// @Param data body model.Content true "分类"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -34,11 +34,10 @@ func createContent(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping content
-// @Schemes
-// @Description delete a content
+// @Summary delete content
+// @Description delete content
 // @Tags Content
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200
@@ -58,11 +57,11 @@ func deleteContent(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping content
-// @Schemes
-// @Description update a content
+// @Summary update content
+// @Description update content
 // @Tags Content
+// @Security ApiKeyAuth
+// @Param data body model.Content true "分类"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -83,11 +82,10 @@ func updateContent(c echo.Context) error {
 	return nil
 }
 
-// PingExample godoc
-// @Summary ping content
-// @Schemes
+// @Summary get_all_content
 // @Description get all content
 // @Tags Content
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Success 200

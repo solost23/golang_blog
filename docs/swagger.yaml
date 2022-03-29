@@ -1,4 +1,89 @@
 basePath: /
+definitions:
+  model.Article:
+    properties:
+      article_content:
+        type: string
+      article_name:
+        type: string
+      contentID:
+        description: 关联到 content 表
+        type: integer
+      createTime:
+        type: integer
+      id:
+        type: integer
+      updateTime:
+        type: integer
+      userID:
+        description: 关联到 user 表
+        type: integer
+    type: object
+  model.CasbinModel:
+    properties:
+      method:
+        type: string
+      path:
+        type: string
+      ptype:
+        type: string
+      role_name:
+        type: string
+    type: object
+  model.Comment:
+    properties:
+      articleID:
+        type: integer
+      comment_content:
+        type: string
+      createTime:
+        type: integer
+      id:
+        type: integer
+      is_thumbs_up:
+        type: string
+      parentID:
+        type: integer
+      updateTime:
+        type: integer
+      userID:
+        type: integer
+    type: object
+  model.Content:
+    properties:
+      content_name:
+        type: string
+      createTime:
+        type: integer
+      id:
+        type: integer
+      introduce:
+        type: string
+      updateTime:
+        type: integer
+      userID:
+        description: 关联到 user 表
+        type: integer
+    type: object
+  model.User:
+    properties:
+      createTime:
+        type: integer
+      id:
+        type: integer
+      mainPageUrl:
+        type: string
+      nick_name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      updateTime:
+        type: integer
+      user_name:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -16,58 +101,82 @@ paths:
       responses:
         "200":
           description: ""
-      summary: ping article
+      security:
+      - ApiKeyAuth: []
+      summary: get_all_article
       tags:
       - Article
   /article/{content_name}:
     get:
       consumes:
       - application/json
-      description: create a article
+      description: create article
+      parameters:
+      - description: 文章
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Article'
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping article
+      security:
+      - ApiKeyAuth: []
+      summary: create_article
       tags:
       - Article
   /article/{content_name}/{article_name}:
     delete:
       consumes:
       - application/json
-      description: delete a article
+      description: delete article
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping article
+      security:
+      - ApiKeyAuth: []
+      summary: delete_article
       tags:
       - Article
     put:
       consumes:
       - application/json
-      description: create a article
+      description: update article
+      parameters:
+      - description: 文章
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Article'
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping article
+      security:
+      - ApiKeyAuth: []
+      summary: update_article
       tags:
       - Article
   /article/{user_name}/{content_name}/{article_name}:
     get:
       consumes:
       - application/json
-      description: get a article
+      description: get article
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping article
+      security:
+      - ApiKeyAuth: []
+      summary: get article
       tags:
       - Article
   /comment/{article_id}:
@@ -80,46 +189,61 @@ paths:
       responses:
         "200":
           description: ""
-      summary: ping comment
+      security:
+      - ApiKeyAuth: []
+      summary: get_all_comment
       tags:
       - Comment
   /comment/{comment_id}:
     delete:
       consumes:
       - application/json
-      description: delete a comment
+      description: delete comment
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping comment
+      security:
+      - ApiKeyAuth: []
+      summary: delete comment
       tags:
       - Comment
   /comment/{user_name}/{article_id}/{parent_id}:
     post:
       consumes:
       - application/json
-      description: create a comment
+      description: create comment
+      parameters:
+      - description: 评论
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Comment'
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping comment
+      security:
+      - ApiKeyAuth: []
+      summary: create_comment
       tags:
       - Comment
   /content:
     delete:
       consumes:
       - application/json
-      description: delete a content
+      description: delete content
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping content
+      security:
+      - ApiKeyAuth: []
+      summary: delete content
       tags:
       - Content
     get:
@@ -131,31 +255,51 @@ paths:
       responses:
         "200":
           description: ""
-      summary: ping content
+      security:
+      - ApiKeyAuth: []
+      summary: get_all_content
       tags:
       - Content
     post:
       consumes:
       - application/json
       description: create a content
+      parameters:
+      - description: 分类
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Content'
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping content
+      security:
+      - ApiKeyAuth: []
+      summary: create content
       tags:
       - Content
     put:
       consumes:
       - application/json
-      description: update a content
+      description: update content
+      parameters:
+      - description: 分类
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Content'
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping content
+      security:
+      - ApiKeyAuth: []
+      summary: update content
       tags:
       - Content
   /log:
@@ -189,12 +333,21 @@ paths:
       consumes:
       - application/json
       description: login
+      parameters:
+      - description: 用户
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping user
+      security:
+      - ApiKeyAuth: []
+      summary: login
       tags:
       - User
   /register:
@@ -202,12 +355,21 @@ paths:
       consumes:
       - application/json
       description: register
+      parameters:
+      - description: 用户
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping user
+      security:
+      - ApiKeyAuth: []
+      summary: register
       tags:
       - User
   /role:
@@ -220,7 +382,9 @@ paths:
       responses:
         "200":
           description: ""
-      summary: ping role
+      security:
+      - ApiKeyAuth: []
+      summary: delete roleAuth
       tags:
       - Role
     get:
@@ -232,19 +396,30 @@ paths:
       responses:
         "200":
           description: ""
-      summary: ping role
+      security:
+      - ApiKeyAuth: []
+      summary: get_all_roleAuth
       tags:
       - Role
     post:
       consumes:
       - application/json
-      description: add roleAuth
+      description: create roleAuth
+      parameters:
+      - description: 角色权限
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.CasbinModel'
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping role
+      security:
+      - ApiKeyAuth: []
+      summary: create roleAuth
       tags:
       - Role
   /role/{role_name}:
@@ -257,7 +432,9 @@ paths:
       responses:
         "200":
           description: ""
-      summary: ping role
+      security:
+      - ApiKeyAuth: []
+      summary: get_roleAuth
       tags:
       - Role
   /user/{user_name}:
@@ -270,19 +447,30 @@ paths:
       responses:
         "200":
           description: ""
-      summary: ping user
+      security:
+      - ApiKeyAuth: []
+      summary: delete_user
       tags:
       - User
     put:
       consumes:
       - application/json
       description: update user
+      parameters:
+      - description: 用户
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
       produces:
       - application/json
       responses:
         "200":
           description: ""
-      summary: ping user
+      security:
+      - ApiKeyAuth: []
+      summary: update_user
       tags:
       - User
 schemes:

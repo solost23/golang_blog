@@ -18,6 +18,11 @@ const docTemplate = `{
     "paths": {
         "/article": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get all article",
                 "consumes": [
                     "application/json"
@@ -28,7 +33,7 @@ const docTemplate = `{
                 "tags": [
                     "Article"
                 ],
-                "summary": "ping article",
+                "summary": "get_all_article",
                 "responses": {
                     "200": {
                         "description": ""
@@ -38,7 +43,12 @@ const docTemplate = `{
         },
         "/article/{content_name}": {
             "get": {
-                "description": "create a article",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "create article",
                 "consumes": [
                     "application/json"
                 ],
@@ -48,7 +58,18 @@ const docTemplate = `{
                 "tags": [
                     "Article"
                 ],
-                "summary": "ping article",
+                "summary": "create_article",
+                "parameters": [
+                    {
+                        "description": "文章",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Article"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": ""
@@ -58,7 +79,12 @@ const docTemplate = `{
         },
         "/article/{content_name}/{article_name}": {
             "put": {
-                "description": "create a article",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "update article",
                 "consumes": [
                     "application/json"
                 ],
@@ -68,7 +94,18 @@ const docTemplate = `{
                 "tags": [
                     "Article"
                 ],
-                "summary": "ping article",
+                "summary": "update_article",
+                "parameters": [
+                    {
+                        "description": "文章",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Article"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": ""
@@ -76,7 +113,12 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "delete a article",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete article",
                 "consumes": [
                     "application/json"
                 ],
@@ -86,7 +128,7 @@ const docTemplate = `{
                 "tags": [
                     "Article"
                 ],
-                "summary": "ping article",
+                "summary": "delete_article",
                 "responses": {
                     "200": {
                         "description": ""
@@ -96,7 +138,12 @@ const docTemplate = `{
         },
         "/article/{user_name}/{content_name}/{article_name}": {
             "get": {
-                "description": "get a article",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get article",
                 "consumes": [
                     "application/json"
                 ],
@@ -106,7 +153,7 @@ const docTemplate = `{
                 "tags": [
                     "Article"
                 ],
-                "summary": "ping article",
+                "summary": "get article",
                 "responses": {
                     "200": {
                         "description": ""
@@ -116,6 +163,11 @@ const docTemplate = `{
         },
         "/comment/{article_id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get all comment",
                 "consumes": [
                     "application/json"
@@ -126,7 +178,7 @@ const docTemplate = `{
                 "tags": [
                     "Comment"
                 ],
-                "summary": "ping comment",
+                "summary": "get_all_comment",
                 "responses": {
                     "200": {
                         "description": ""
@@ -136,7 +188,12 @@ const docTemplate = `{
         },
         "/comment/{comment_id}": {
             "delete": {
-                "description": "delete a comment",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete comment",
                 "consumes": [
                     "application/json"
                 ],
@@ -146,7 +203,7 @@ const docTemplate = `{
                 "tags": [
                     "Comment"
                 ],
-                "summary": "ping comment",
+                "summary": "delete comment",
                 "responses": {
                     "200": {
                         "description": ""
@@ -156,7 +213,12 @@ const docTemplate = `{
         },
         "/comment/{user_name}/{article_id}/{parent_id}": {
             "post": {
-                "description": "create a comment",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "create comment",
                 "consumes": [
                     "application/json"
                 ],
@@ -166,7 +228,18 @@ const docTemplate = `{
                 "tags": [
                     "Comment"
                 ],
-                "summary": "ping comment",
+                "summary": "create_comment",
+                "parameters": [
+                    {
+                        "description": "评论",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Comment"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": ""
@@ -176,6 +249,11 @@ const docTemplate = `{
         },
         "/content": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get all content",
                 "consumes": [
                     "application/json"
@@ -186,7 +264,7 @@ const docTemplate = `{
                 "tags": [
                     "Content"
                 ],
-                "summary": "ping content",
+                "summary": "get_all_content",
                 "responses": {
                     "200": {
                         "description": ""
@@ -194,7 +272,12 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "update a content",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "update content",
                 "consumes": [
                     "application/json"
                 ],
@@ -204,7 +287,18 @@ const docTemplate = `{
                 "tags": [
                     "Content"
                 ],
-                "summary": "ping content",
+                "summary": "update content",
+                "parameters": [
+                    {
+                        "description": "分类",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Content"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": ""
@@ -212,6 +306,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "create a content",
                 "consumes": [
                     "application/json"
@@ -222,7 +321,18 @@ const docTemplate = `{
                 "tags": [
                     "Content"
                 ],
-                "summary": "ping content",
+                "summary": "create content",
+                "parameters": [
+                    {
+                        "description": "分类",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Content"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": ""
@@ -230,7 +340,12 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "delete a content",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete content",
                 "consumes": [
                     "application/json"
                 ],
@@ -240,7 +355,7 @@ const docTemplate = `{
                 "tags": [
                     "Content"
                 ],
-                "summary": "ping content",
+                "summary": "delete content",
                 "responses": {
                     "200": {
                         "description": ""
@@ -290,6 +405,11 @@ const docTemplate = `{
         },
         "/login": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "login",
                 "consumes": [
                     "application/json"
@@ -300,7 +420,18 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "ping user",
+                "summary": "login",
+                "parameters": [
+                    {
+                        "description": "用户",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": ""
@@ -310,6 +441,11 @@ const docTemplate = `{
         },
         "/register": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "register",
                 "consumes": [
                     "application/json"
@@ -320,7 +456,18 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "ping user",
+                "summary": "register",
+                "parameters": [
+                    {
+                        "description": "用户",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": ""
@@ -330,6 +477,11 @@ const docTemplate = `{
         },
         "/role": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get all roleAuth",
                 "consumes": [
                     "application/json"
@@ -340,7 +492,7 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "ping role",
+                "summary": "get_all_roleAuth",
                 "responses": {
                     "200": {
                         "description": ""
@@ -348,7 +500,12 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "add roleAuth",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "create roleAuth",
                 "consumes": [
                     "application/json"
                 ],
@@ -358,7 +515,18 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "ping role",
+                "summary": "create roleAuth",
+                "parameters": [
+                    {
+                        "description": "角色权限",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CasbinModel"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": ""
@@ -366,6 +534,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "delete roleAuth",
                 "consumes": [
                     "application/json"
@@ -376,7 +549,7 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "ping role",
+                "summary": "delete roleAuth",
                 "responses": {
                     "200": {
                         "description": ""
@@ -386,6 +559,11 @@ const docTemplate = `{
         },
         "/role/{role_name}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get roleAuth",
                 "consumes": [
                     "application/json"
@@ -396,7 +574,7 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "ping role",
+                "summary": "get_roleAuth",
                 "responses": {
                     "200": {
                         "description": ""
@@ -406,6 +584,11 @@ const docTemplate = `{
         },
         "/user/{user_name}": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "update user",
                 "consumes": [
                     "application/json"
@@ -416,7 +599,18 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "ping user",
+                "summary": "update_user",
+                "parameters": [
+                    {
+                        "description": "用户",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": ""
@@ -424,6 +618,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "delete user",
                 "consumes": [
                     "application/json"
@@ -434,11 +633,140 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "ping user",
+                "summary": "delete_user",
                 "responses": {
                     "200": {
                         "description": ""
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Article": {
+            "type": "object",
+            "properties": {
+                "article_content": {
+                    "type": "string"
+                },
+                "article_name": {
+                    "type": "string"
+                },
+                "contentID": {
+                    "description": "关联到 content 表",
+                    "type": "integer"
+                },
+                "createTime": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updateTime": {
+                    "type": "integer"
+                },
+                "userID": {
+                    "description": "关联到 user 表",
+                    "type": "integer"
+                }
+            }
+        },
+        "model.CasbinModel": {
+            "type": "object",
+            "properties": {
+                "method": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "ptype": {
+                    "type": "string"
+                },
+                "role_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Comment": {
+            "type": "object",
+            "properties": {
+                "articleID": {
+                    "type": "integer"
+                },
+                "comment_content": {
+                    "type": "string"
+                },
+                "createTime": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_thumbs_up": {
+                    "type": "string"
+                },
+                "parentID": {
+                    "type": "integer"
+                },
+                "updateTime": {
+                    "type": "integer"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Content": {
+            "type": "object",
+            "properties": {
+                "content_name": {
+                    "type": "string"
+                },
+                "createTime": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "introduce": {
+                    "type": "string"
+                },
+                "updateTime": {
+                    "type": "integer"
+                },
+                "userID": {
+                    "description": "关联到 user 表",
+                    "type": "integer"
+                }
+            }
+        },
+        "model.User": {
+            "type": "object",
+            "properties": {
+                "createTime": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "mainPageUrl": {
+                    "type": "string"
+                },
+                "nick_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "updateTime": {
+                    "type": "integer"
+                },
+                "user_name": {
+                    "type": "string"
                 }
             }
         }
