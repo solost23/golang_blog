@@ -15,7 +15,6 @@ import (
 // @Summary register
 // @Description register
 // @Tags User
-// @Security ApiKeyAuth
 // @Param data body model.User true "用户"
 // @Accept json
 // @Produce json
@@ -41,7 +40,6 @@ func reg(c echo.Context) error {
 // @Summary login
 // @Description login
 // @Tags User
-// @Security ApiKeyAuth
 // @Param data body model.User true "用户"
 // @Accept json
 // @Produce json

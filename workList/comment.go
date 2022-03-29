@@ -84,9 +84,6 @@ func (w *WorkList) CreateComment(comment *model.Comment) error {
 		fmt.Println(err.Error())
 		return err
 	}
-	if err := w.CreateLog(user.UserName, INSERT, COMMENT, article.ArticleName+" "+comment.CommentContent, SUCCESS); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -114,9 +111,6 @@ func (w *WorkList) DeleteComment(comment *model.Comment) error {
 	}
 	if err := comment.Delete(); err != nil {
 		fmt.Println(err.Error())
-		return err
-	}
-	if err := w.CreateLog(user.UserName, DELETE, COMMENT, comment.CommentContent, SUCCESS); err != nil {
 		return err
 	}
 	return nil

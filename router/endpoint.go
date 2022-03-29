@@ -8,6 +8,7 @@ import (
 
 	_ "golang_blog/docs" // 一定要导入docs，否则会报内部错误
 	"golang_blog/middleware/jwt"
+	"golang_blog/middleware/logger"
 )
 
 func RegisterNoAuth(group *echo.Group) {
@@ -24,7 +25,6 @@ func RegisterAuth(group *echo.Group) {
 
 	group.Use(role.AuthCheckRole)
 	RegisterRole(group)
-	RegisterLog(group)
 }
 
 func RegisterUser(group *echo.Group) {
@@ -68,14 +68,6 @@ func RegisterComment(group *echo.Group) {
 	}
 }
 
-func RegisterLog(group *echo.Group) {
-	log := group.Group("/log")
-	{
-		log.GET("", getAllLog)
-		log.DELETE("/:log_id", deleteLog)
-	}
-}
-
 func RegisterRole(group *echo.Group) {
 	role := group.Group("/role")
 	{
@@ -88,9 +80,7 @@ func RegisterRole(group *echo.Group) {
 
 func Register() *echo.Echo {
 	router := echo.New()
-	// , middleware.Recover()
-	router.Use(middleware.Logger(), middleware.Recover())
-
+	router.Use(logger.Logger, middleware.Recover())
 	group := router.Group("")
 	RegisterNoAuth(group)
 	RegisterAuth(group)

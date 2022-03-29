@@ -21,10 +21,6 @@ func (w *WorkList) Reg(user *model.User) error {
 		fmt.Println(err.Error())
 		return err
 	}
-	if err := w.CreateLog(user.UserName, INSERT, USER, user.UserName, SUCCESS); err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
 	return nil
 }
 
@@ -73,9 +69,6 @@ func (w *WorkList) UpdateUser(user *model.User) error {
 		fmt.Println(err.Error())
 		return err
 	}
-	if err := w.CreateLog(user.UserName, UPDATE, USER, user.UserName, SUCCESS); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -90,9 +83,6 @@ func (w *WorkList) DeleteUser(user *model.User) error {
 	// 删除用户
 	if err := user.Delete(); err != nil {
 		fmt.Println(err.Error())
-		return err
-	}
-	if err := w.CreateLog(user.UserName, DELETE, USER, user.UserName, SUCCESS); err != nil {
 		return err
 	}
 	return nil

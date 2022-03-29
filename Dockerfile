@@ -11,7 +11,7 @@ ENV GO111MODULE=on \
 
 WORKDIR /app/golang_blog
 COPY . /app/golang_blog
-RUN go mod tidy
+RUN go get github.com/sirupsen/logrus/internal/testutils && go mod tidy
 
 EXPOSE 8080
 

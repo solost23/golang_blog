@@ -28,9 +28,6 @@ func (w *WorkList) CreateContent(content *model.Content) error {
 		fmt.Println(err.Error())
 		return err
 	}
-	if err := w.CreateLog(user.UserName, INSERT, CONTENT, content.ContentName, SUCCESS); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -55,9 +52,6 @@ func (w *WorkList) DeleteContent(content *model.Content) error {
 		fmt.Println(err.Error())
 		return err
 	}
-	if err := w.CreateLog(user.UserName, DELETE, CONTENT, content.ContentName, SUCCESS); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -79,9 +73,6 @@ func (w *WorkList) UpdateContent(content *model.Content) error {
 	content.ID = tmpContent.ID
 	if err := content.Update(); err != nil {
 		fmt.Println(err.Error())
-		return err
-	}
-	if err := w.CreateLog(user.UserName, UPDATE, CONTENT, content.ContentName, SUCCESS); err != nil {
 		return err
 	}
 	return nil
