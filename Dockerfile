@@ -15,7 +15,7 @@ RUN go get github.com/sirupsen/logrus/internal/testutils && go mod tidy
 
 EXPOSE 8080
 
-CMD ["go", "run", "cmd/main.go"]
+CMD ["go", "run", "main.go"]
 
 
 
