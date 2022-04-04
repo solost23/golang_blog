@@ -8,13 +8,13 @@ import (
 	xormadapter "github.com/casbin/xorm-adapter"
 	"github.com/labstack/echo/v4"
 
-	"golang_blog/common"
 	"golang_blog/config"
+	"golang_blog/middleware/jwt"
 )
 
 func AuthCheckRole(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		claims := c.Get("claims").(*common.Claims)
+		claims := c.Get("claims").(*jwt.Claims)
 		role := claims.Role
 		mysqlConfig := config.GetMysqlConfig()
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/", mysqlConfig.UserName, mysqlConfig.Password, mysqlConfig.Host, mysqlConfig.Ip)

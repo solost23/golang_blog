@@ -3,9 +3,10 @@ package workList
 import (
 	"errors"
 	"fmt"
+
 	"gorm.io/gorm"
 
-	"golang_blog/common"
+	"golang_blog/middleware/jwt"
 	"golang_blog/model"
 )
 
@@ -16,7 +17,7 @@ func (w *WorkList) Reg(user *model.User) error {
 		return errors.New("user data exist")
 	}
 	// 若不存在，则创建
-	user.PassWord = common.NewMd5(user.PassWord, "ty")
+	user.PassWord = model.NewMd5(user.PassWord, "ty")
 	if err := user.Create(); err != nil {
 		fmt.Println(err.Error())
 		return err
@@ -37,11 +38,11 @@ func (w *WorkList) Login(user *model.User) (model.Token, error) {
 	}
 	// 如果有则检查账户名密码
 	// 如果账户名 || 密码错误，返回错误
-	if userName != user.UserName || common.NewMd5(password, "ty") != user.PassWord {
+	if userName != user.UserName || model.NewMd5(password, "ty") != user.PassWord {
 		return token, errors.New("username or password failed")
 	}
 	// 否则生成一个 token
-	tokenString, err := common.CreateToken(userName, role)
+	tokenString, err := jwt.CreateToken(userName, role)
 	if err != nil {
 		fmt.Println(err.Error())
 		return token, err

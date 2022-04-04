@@ -17,7 +17,6 @@ import (
 // @schemes http https
 // @BasePath /
 func main() {
-	fmt.Println("准备连接数据库")
 	var DB = model.DB
 	if err := DB.AutoMigrate(&model.User{}); err != nil {
 		panic(err.Error())

@@ -2,11 +2,10 @@ package jwt
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
-
-	"golang_blog/common"
 )
 
 func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
@@ -17,7 +16,7 @@ func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
 			return err
 		}
 		tknStr := cookie.Value
-		claims := &common.Claims{}
+		claims := &Claims{}
 		tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte("my_secret_key"), nil
 		})
@@ -34,4 +33,29 @@ func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
 		next(c)
 		return nil
 	}
+}
+
+var jwtKey = []byte("my_secret_key")
+
+type Claims struct {
+	UserName string
+	Role     string
+	jwt.StandardClaims
+}
+
+func CreateToken(userName, role string) (string, error) {
+	expirationTime := time.Now().Add(5 * time.Minute)
+	claims := &Claims{
+		UserName: userName,
+		Role:     role,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
 }
