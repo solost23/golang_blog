@@ -6,7 +6,6 @@ import (
 	"golang_blog/model"
 	"golang_blog/mysql"
 	"golang_blog/workList"
-	"net/http"
 )
 
 // @Summary create content
@@ -22,15 +21,15 @@ func createContent(c echo.Context) error {
 	//fmt.Println(c.Get("token"))
 	var content model.Content
 	if err := c.Bind(&content); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).CreateContent(&content); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, content)
+	Render(c, nil)
 	return nil
 }
 
@@ -45,15 +44,15 @@ func createContent(c echo.Context) error {
 func deleteContent(c echo.Context) error {
 	var content model.Content
 	if err := c.Bind(&content); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).DeleteContent(&content); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "content delete success")
+	Render(c, nil)
 	return nil
 }
 
@@ -69,16 +68,16 @@ func deleteContent(c echo.Context) error {
 func updateContent(c echo.Context) error {
 	var content model.Content
 	if err := c.Bind(&content); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		Render(c, err)
 		return err
 	}
 	fmt.Println(content)
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).UpdateContent(&content); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, content)
+	Render(c, nil)
 	return nil
 }
 
@@ -96,9 +95,9 @@ func getAllContent(c echo.Context) error {
 	var DB = mysql.DB
 	contentList, err := workList.NewWorkList(c, DB).GetAllContent(&content)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, contentList)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, contentList)
+	Render(c, nil, contentList)
 	return nil
 }

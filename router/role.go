@@ -1,8 +1,6 @@
 package router
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4"
 
 	"golang_blog/model"
@@ -22,15 +20,15 @@ import (
 func addRoleAuth(c echo.Context) error {
 	var casbinModel = new(model.CasbinModel)
 	if err := c.Bind(casbinModel); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).AddRoleAuth(casbinModel); err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, casbinModel)
+	Render(c, nil)
 	return nil
 }
 
@@ -45,15 +43,15 @@ func addRoleAuth(c echo.Context) error {
 func deleteRoleAuth(c echo.Context) error {
 	var casbinModel = new(model.CasbinModel)
 	if err := c.Bind(casbinModel); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).DeleteRoleAuth(casbinModel); err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "delete roleAuth success")
+	Render(c, nil)
 	return nil
 }
 
@@ -70,9 +68,9 @@ func getAllRoleAuth(c echo.Context) error {
 	var DB = mysql.DB
 	casbinModelList, err := workList.NewWorkList(c, DB).GetAllRoleAuth(casbinModel)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		Render(c, err)
 	}
-	c.JSON(http.StatusOK, casbinModelList)
+	Render(c, nil, casbinModelList)
 	return nil
 }
 
@@ -91,9 +89,9 @@ func getRoleAuth(c echo.Context) error {
 	var DB = mysql.DB
 	casbinModelList, err := workList.NewWorkList(c, DB).GetRoleAuth(casbinModel)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, casbinModelList)
+	Render(c, nil, casbinModelList)
 	return nil
 }

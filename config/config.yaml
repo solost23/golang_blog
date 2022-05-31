@@ -1,6 +1,6 @@
 version: v1.0
 mysql:
-  host: mysqldb
+  host: localhost
   ip: 3306
   username: root
   password: 123

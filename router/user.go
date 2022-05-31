@@ -23,17 +23,17 @@ import (
 func reg(c echo.Context) error {
 	var user model.User
 	if err := c.Bind(&user); err != nil {
-		c.JSON(http.StatusBadRequest, "request data err")
+		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
 	err := workList.NewWorkList(c, DB).Reg(&user)
 	if err != nil {
 		log.Println(err.Error())
-		c.JSON(http.StatusInternalServerError, err.Error())
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, user)
+	Render(c, nil)
 	return nil
 }
 
@@ -49,13 +49,13 @@ func login(c echo.Context) error {
 	// 数据绑定
 	var user model.User
 	if err := c.Bind(&user); err != nil {
-		c.JSON(http.StatusBadRequest, "request data err")
+
 		return err
 	}
 	var DB = mysql.DB
 	token, err := workList.NewWorkList(c, DB).Login(&user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		Render(c, err)
 		return err
 	}
 	cookie := &http.Cookie{
@@ -64,7 +64,7 @@ func login(c echo.Context) error {
 		Expires: time.Now().Add(5 * time.Minute),
 	}
 	c.SetCookie(cookie)
-	c.JSON(http.StatusOK, token)
+	Render(c, err, token)
 	return nil
 }
 
@@ -82,15 +82,15 @@ func updateUser(c echo.Context) error {
 	c.Set("user_name", userName)
 	var user model.User
 	if err := c.Bind(&user); err != nil {
-		c.JSON(http.StatusBadRequest, "request data err")
+		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).UpdateUser(&user); err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, user)
+	Render(c, nil)
 	return nil
 }
 
@@ -108,9 +108,9 @@ func deleteUser(c echo.Context) error {
 	var user model.User
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).DeleteUser(&user); err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "user delete success")
+	Render(c, nil)
 	return nil
 }

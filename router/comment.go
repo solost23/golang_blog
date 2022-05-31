@@ -1,8 +1,6 @@
 package router
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4"
 
 	"golang_blog/model"
@@ -26,10 +24,10 @@ func getAllComment(c echo.Context) error {
 	var DB = mysql.DB
 	commentList, err := workList.NewWorkList(c, DB).GetAllComment(&comment)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, commentList)
+	Render(c, nil, commentList)
 	return nil
 }
 
@@ -51,15 +49,15 @@ func createComment(c echo.Context) error {
 	c.Set("parent_id", parentID)
 	var comment model.Comment
 	if err := c.Bind(&comment); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).CreateComment(&comment); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, comment)
+	Render(c, nil)
 	return nil
 }
 
@@ -79,9 +77,9 @@ func deleteComment(c echo.Context) error {
 	var comment = new(model.Comment)
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).DeleteComment(comment); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "delete comment success")
+	Render(c, nil)
 	return nil
 }

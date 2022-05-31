@@ -1,8 +1,6 @@
 package router
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4"
 
 	"golang_blog/model"
@@ -24,15 +22,15 @@ func createArticle(c echo.Context) error {
 	c.Set("content_name", contentName)
 	var article model.Article
 	if err := c.Bind(&article); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).CreateArticle(&article); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, article)
+	Render(c, nil)
 	return nil
 }
 
@@ -52,10 +50,10 @@ func deleteArticle(c echo.Context) error {
 	var article model.Article
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).DeleteArticle(&article); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, "article delete success")
+	Render(c, nil)
 	return nil
 }
 
@@ -75,15 +73,15 @@ func updateArticle(c echo.Context) error {
 	c.Set("article_name", articleName)
 	var article model.Article
 	if err := c.Bind(&article); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		Render(c, err)
 		return nil
 	}
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).UpdateArticle(&article); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, article)
+	Render(c, nil)
 	return nil
 }
 
@@ -101,10 +99,10 @@ func getAllArticle(c echo.Context) error {
 	var DB = mysql.DB
 	articleList, err := workList.NewWorkList(c, DB).GetAllArticle(&article)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, articleList)
+	Render(c, nil, articleList)
 	return nil
 }
 
@@ -126,9 +124,9 @@ func getArticle(c echo.Context) error {
 	var article model.Article
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).GetArticle(&article); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		Render(c, err)
 		return err
 	}
-	c.JSON(http.StatusOK, article)
+	Render(c, nil, article)
 	return nil
 }

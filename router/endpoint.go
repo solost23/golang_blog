@@ -5,11 +5,14 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/swaggo/echo-swagger"
 	"golang_blog/middleware/role"
+	"net/http"
 
 	_ "golang_blog/docs" // 一定要导入docs，否则会报内部错误
 	"golang_blog/middleware/jwt"
 	"golang_blog/middleware/logger"
 )
+
+type ErrCode int
 
 func RegisterNoAuth(group *echo.Group) {
 	group.POST("/register", reg)
@@ -88,4 +91,40 @@ func Register() *echo.Echo {
 	// swagger
 	router.GET("/swagger/*", echoSwagger.WrapHandler)
 	return router
+}
+
+// 封装返回
+
+type ApiResponse struct {
+	// in: body
+	Code    ErrCode     `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+// 封装返回
+func RenderJSON(ctx echo.Context, code ErrCode, message string, data ...interface{}) {
+	// 如果切片中无数据，那么不封装data，否则封装data
+	var res ApiResponse
+	if len(data) >= 1 {
+		res = ApiResponse{
+			Code:    code,
+			Message: message,
+			Data:    data[0],
+		}
+	} else {
+		res = ApiResponse{
+			Code:    code,
+			Message: message,
+		}
+	}
+	ctx.JSON(http.StatusOK, res)
+}
+
+func Render(ctx echo.Context, err error, data ...interface{}) {
+	if err != nil {
+		RenderJSON(ctx, http.StatusOK, err.Error(), data...)
+	} else {
+		RenderJSON(ctx, http.StatusOK, "success", data...)
+	}
 }
