@@ -1,6 +1,11 @@
 package model
 
-import "time"
+import (
+	"errors"
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Article struct {
 	ID             int32  `gorm:"primary_key"`
@@ -12,61 +17,80 @@ type Article struct {
 	UpdateTime     int64  `gorm:"column:update_time"`
 }
 
-func (a *Article) TableName() string {
-	return "article"
+// 声明对象的时候直接返回一个接口
+func NewArticle() Moder {
+	return &Article{}
 }
 
-func (a *Article) Create() error {
-	a.CreateTime = time.Now().Unix()
-	a.UpdateTime = time.Now().Unix()
-	if err := DB.Table("article").Create(a).Error; err != nil {
-		return err
-	}
-	return nil
+func (t *Article) TableName() string {
+	return "articles"
 }
 
-func (a *Article) Delete() error {
-	if err := DB.Table("article").Where("id=?", a.ID).Delete(a).Error; err != nil {
-		return err
-	}
-	return nil
+func (t *Article) Insert(data interface{}) (err error) {
+	t.CreateTime = time.Now().Unix()
+	t.UpdateTime = time.Now().Unix()
+	return DB.Table(t.TableName()).Create(&t).Error
 }
 
-func (a *Article) Update() error {
-	a.UpdateTime = time.Now().Unix()
-	if err := DB.Table("article").Omit("id", "content_id", "user_id").Where("id=?", a.ID).Save(a).Error; err != nil {
-		return err
-	}
-	return nil
+func (t *Article) Delete(query interface{}, args ...interface{}) (err error) {
+	return DB.Table(t.TableName()).Where(query, args...).Delete(&t).Error
 }
 
-func (a *Article) Find() ([]*Article, error) {
-	var res []*Article
-	if err := DB.Table("article").Find(&res).Error; err != nil {
-		return res, err
+func (t *Article) Save(data interface{}) (err error) {
+	return DB.Table(t.TableName()).Save(&t).Error
+}
+
+func (t *Article) WhereOne(query interface{}, args ...interface{}) (article interface{}, err error) {
+	err = DB.Table(t.TableName()).Where(query, args...).First(&article).Error
+	if err != nil {
+		return nil, err
 	}
-	return res, nil
+	return article, nil
+}
+
+func (t *Article) WhereAll(query interface{}, args ...interface{}) (articles interface{}, err error) {
+	err = DB.Table(t.TableName()).Where(query, args...).Find(&articles).Error
+	if err != nil {
+		return nil, err
+	}
+	return articles, nil
+}
+
+func (t *Article) PageList(params *ListPageInput, conditions interface{}, args ...interface{}) (articles interface{}, count int64, err error) {
+	offset := (params.Page - 1) * params.PageSize
+	query := DB.Table(t.TableName()).Where(conditions, args...)
+
+	err = query.Offset(offset).Limit(params.PageSize).Find(&articles).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, 0, err
+	}
+
+	err = DB.Table(t.TableName()).Where(conditions, args...).Count(&count).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, 0, err
+	}
+	return articles, count, nil
 }
 
 // 根据文章名查文章id
-func (a *Article) FindByName(articleName string) error {
-	if err := DB.Table("article").Where("article_name=?", a.ArticleName).First(a).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-// 根据id查文章名称
-func (a *Article) FindById() error {
-	if err := DB.Table("article").Where("id=?", a.ID).First(a).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func (a *Article) FindByUserIdAndContentIdAndArticleName() error {
-	if err := DB.Table("article").Where("user_id=? AND content_id=? AND article_name=?", a.UserID, a.ContentID, a.ArticleName).First(a).Error; err != nil {
-		return err
-	}
-	return nil
-}
+//func (a *Article) FindByName(articleName string) error {
+//	if err := DB.Table("article").Where("article_name=?", a.ArticleName).First(a).Error; err != nil {
+//		return err
+//	}
+//	return nil
+//}
+//
+//// 根据id查文章名称
+//func (a *Article) FindById() error {
+//	if err := DB.Table("article").Where("id=?", a.ID).First(a).Error; err != nil {
+//		return err
+//	}
+//	return nil
+//}
+//
+//func (a *Article) FindByUserIdAndContentIdAndArticleName() error {
+//	if err := DB.Table("article").Where("user_id=? AND content_id=? AND article_name=?", a.UserID, a.ContentID, a.ArticleName).First(a).Error; err != nil {
+//		return err
+//	}
+//	return nil
+//}

@@ -1,10 +1,11 @@
 package model
 
-type DBInterface interface {
-	Create() error
-	Delete() error
-	Update() error
-	Find() ([]*Content, error)
-	FindByName(string) error
-	FindById() error
+type Moder interface {
+	TableName() string
+	Insert(interface{}) error
+	Delete(interface{}, ...interface{}) error
+	Save(data interface{}) error
+	WhereOne(interface{}, ...interface{}) (interface{}, error)
+	WhereAll(interface{}, ...interface{}) (interface{}, error)
+	PageList(*ListPageInput, interface{}, ...interface{}) (interface{}, int64, error)
 }

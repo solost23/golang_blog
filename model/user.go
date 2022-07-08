@@ -1,14 +1,10 @@
 package model
 
 import (
-	"crypto/md5"
-	"fmt"
-	"strings"
+	"errors"
 	"time"
 
 	"gorm.io/gorm"
-
-	"golang_blog/mysql"
 )
 
 type User struct {
@@ -22,60 +18,83 @@ type User struct {
 	UpdateTime  int64  `gorm:"column:update_time"`
 }
 
-func (u *User) TableName() string {
-	return "user"
+func NewUser() Moder {
+	return &User{}
 }
 
-var DB *gorm.DB = mysql.DB
-var DBCasbin *gorm.DB = mysql.DBCasbin
+func (t *User) TableName() string {
+	return "users"
+}
 
-func (u *User) Create() error {
-	u.CreateTime = time.Now().Unix()
-	u.UpdateTime = time.Now().Unix()
-	if err := DB.Table("user").Create(u).Error; err != nil {
-		return err
+func (t *User) Insert(data interface{}) (err error) {
+	t.CreateTime = time.Now().Unix()
+	t.UpdateTime = time.Now().Unix()
+	return DB.Table(t.TableName()).Create(&t).Error
+}
+
+func (t *User) Delete(query interface{}, args ...interface{}) (err error) {
+	return DB.Table(t.TableName()).Where(query, args...).Delete(&t).Error
+}
+
+func (t *User) Save(data interface{}) (err error) {
+	t.UpdateTime = time.Now().Unix()
+	return DB.Table(t.TableName()).Save(&t).Error
+}
+
+func (t *User) WhereOne(query interface{}, args ...interface{}) (user interface{}, err error) {
+	err = DB.Table(t.TableName()).Where(query, args...).First(&user).Error
+	if err != nil {
+		return nil, err
 	}
-	return nil
+	return user, nil
 }
 
-func (u *User) Delete() error {
-	if err := DB.Table("user").Where("id=?", u.ID).Delete(u).Error; err != nil {
-		return err
+func (t *User) WhereAll(query interface{}, args ...interface{}) (users interface{}, err error) {
+	err = DB.Table(t.TableName()).Where(query, args...).Find(&users).Error
+	if err != nil {
+		return nil, err
 	}
-	return nil
+	return users, nil
 }
 
-func (u *User) Update() error {
-	u.UpdateTime = time.Now().Unix()
-	if err := DB.Table("user").Omit("id", "password").Where("id=?", u.ID).Save(u).Error; err != nil {
-		return err
+func (t *User) PageList(params *ListPageInput, conditions interface{}, args ...interface{}) (users interface{}, count int64, err error) {
+	offset := (params.Page - 1) * params.PageSize
+	query := DB.Table(t.TableName()).Where(conditions, args...)
+
+	err = query.Offset(offset).Limit(params.PageSize).Find(&users).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, 0, err
 	}
-	return nil
+
+	err = DB.Table(t.TableName()).Where(conditions, args...).Count(&count).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, 0, err
+	}
+	return users, count, nil
 }
 
-func (u *User) FindById() error {
-	if err := DB.Table("user").Where("id=?", u.ID).First(u).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return err
-		}
-	}
-	return nil
-}
-
-func (u *User) FindByName() error {
-	if err := DB.Table("user").Where("user_name=?", u.UserName).First(u).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return err
-		}
-	}
-	return nil
-}
-
-// 给数据库中用户密码进行加密
-func NewMd5(str string, salt ...interface{}) string {
-	if len(salt) > 0 {
-		slice := make([]string, len(salt)+1)
-		str = fmt.Sprintf(str+strings.Join(slice, "%v"), salt...)
-	}
-	return fmt.Sprintf("%x", md5.Sum([]byte(str)))
-}
+//func (u *User) Update() error {
+//	u.UpdateTime = time.Now().Unix()
+//	if err := DB.Table("user").Omit("id", "password").Where("id=?", u.ID).Save(u).Error; err != nil {
+//		return err
+//	}
+//	return nil
+//}
+//
+//func (u *User) FindById() error {
+//	if err := DB.Table("user").Where("id=?", u.ID).First(u).Error; err != nil {
+//		if err == gorm.ErrRecordNotFound {
+//			return err
+//		}
+//	}
+//	return nil
+//}
+//
+//func (u *User) FindByName() error {
+//	if err := DB.Table("user").Where("user_name=?", u.UserName).First(u).Error; err != nil {
+//		if err == gorm.ErrRecordNotFound {
+//			return err
+//		}
+//	}
+//	return nil
+//}

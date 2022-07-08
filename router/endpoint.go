@@ -1,11 +1,12 @@
 package router
 
 import (
+	"golang_blog/middleware/role"
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/swaggo/echo-swagger"
-	"golang_blog/middleware/role"
-	"net/http"
 
 	_ "golang_blog/docs" // 一定要导入docs，否则会报内部错误
 	"golang_blog/middleware/jwt"
@@ -94,7 +95,6 @@ func Register() *echo.Echo {
 }
 
 // 封装返回
-
 type ApiResponse struct {
 	// in: body
 	Code    ErrCode     `json:"code"`
