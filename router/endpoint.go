@@ -54,12 +54,12 @@ func RegisterArticle(group *echo.Group) {
 }
 
 func RegisterContent(group *echo.Group) {
-	content := group.Group("/content")
+	content := group.Group("/category")
 	{
-		content.GET("", getAllContent)
-		content.POST("", createContent)
-		content.DELETE("", deleteContent)
-		content.PUT("", updateContent)
+		content.GET("", getAllCategory)
+		content.POST("", createCategory)
+		content.DELETE("", deleteCategory)
+		content.PUT("", updateCategory)
 	}
 }
 

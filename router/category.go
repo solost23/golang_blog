@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"golang_blog/models"
 	"golang_blog/mysql"
 	"golang_blog/workList"
@@ -18,15 +17,15 @@ import (
 // @Produce json
 // @Success 200
 // @Router /content [post]
-func createContent(c echo.Context) error {
+func createCategory(c echo.Context) error {
 	//fmt.Println(c.Get("token"))
-	var content models.Content
-	if err := c.Bind(&content); err != nil {
+	var category models.Category
+	if err := c.Bind(&category); err != nil {
 		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).CreateContent(&content); err != nil {
+	if err := workList.NewWorkList(c, DB).CreateCategory(&category); err != nil {
 		Render(c, err)
 		return err
 	}
@@ -42,14 +41,14 @@ func createContent(c echo.Context) error {
 // @Produce json
 // @Success 200
 // @Router /content [delete]
-func deleteContent(c echo.Context) error {
-	var content models.Content
-	if err := c.Bind(&content); err != nil {
+func deleteCategory(c echo.Context) error {
+	var category models.Category
+	if err := c.Bind(&category); err != nil {
 		Render(c, err)
 		return err
 	}
 	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).DeleteContent(&content); err != nil {
+	if err := workList.NewWorkList(c, DB).DeleteCategory(&category); err != nil {
 		Render(c, err)
 		return err
 	}
@@ -66,15 +65,14 @@ func deleteContent(c echo.Context) error {
 // @Produce json
 // @Success 200
 // @Router /content [put]
-func updateContent(c echo.Context) error {
-	var content models.Content
-	if err := c.Bind(&content); err != nil {
+func updateCategory(c echo.Context) error {
+	var category models.Category
+	if err := c.Bind(&category); err != nil {
 		Render(c, err)
 		return err
 	}
-	fmt.Println(content)
 	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).UpdateContent(&content); err != nil {
+	if err := workList.NewWorkList(c, DB).UpdateCategory(&category); err != nil {
 		Render(c, err)
 		return err
 	}
@@ -90,11 +88,11 @@ func updateContent(c echo.Context) error {
 // @Produce json
 // @Success 200
 // @Router /content [get]
-func getAllContent(c echo.Context) error {
-	var content models.Content
-	var contentList []*models.Content
+func getAllCategory(c echo.Context) error {
+	var content models.Category
+	var contentList []*models.Category
 	var DB = mysql.DB
-	contentList, err := workList.NewWorkList(c, DB).GetAllContent(&content)
+	contentList, err := workList.NewWorkList(c, DB).GetAllCategory(&content)
 	if err != nil {
 		Render(c, err)
 		return err

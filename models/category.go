@@ -7,38 +7,38 @@ import (
 	"gorm.io/gorm"
 )
 
-type Content struct {
-	ID          int32  `gorm:"primary_key"`
-	UserID      int32  `gorm:"column:user_id"` // 关联到 user 表
-	ContentName string `gorm:"column:content_name" json:"content_name"`
-	Introduce   string `gorm:"column:introduce" json:"introduce"`
-	CreateTime  int64  `gorm:"column:create_time"`
-	UpdateTime  int64  `gorm:"column:update_time"`
+type Category struct {
+	ID           int32  `gorm:"primary_key"`
+	UserID       int32  `gorm:"column:user_id"` // 关联到 user 表
+	CategoryName string `gorm:"column:content_name" json:"category_name"`
+	Introduce    string `gorm:"column:introduce" json:"introduce"`
+	CreateTime   int64  `gorm:"column:create_time"`
+	UpdateTime   int64  `gorm:"column:update_time"`
 }
 
-func NewContent() Moder {
-	return &Content{}
+func NewCategory() Moder {
+	return &Category{}
 }
 
-func (t *Content) TableName() string {
+func (t *Category) TableName() string {
 	return "contents"
 }
 
-func (t *Content) Insert(data interface{}) error {
+func (t *Category) Insert(data interface{}) error {
 	t.CreateTime = time.Now().Unix()
 	t.UpdateTime = time.Now().Unix()
 	return DB.Table("content").Create(&t).Error
 }
 
-func (t *Content) Delete(query interface{}, args ...interface{}) (err error) {
+func (t *Category) Delete(query interface{}, args ...interface{}) (err error) {
 	return DB.Table(t.TableName()).Where(query, args...).Delete(&t).Error
 }
 
-func (t *Content) Save(data interface{}, query interface{}, args ...interface{}) (err error) {
+func (t *Category) Save(data interface{}, query interface{}, args ...interface{}) (err error) {
 	return DB.Table(t.TableName()).Where(query, args...).Save(&t).Error
 }
 
-func (t *Content) WhereOne(query interface{}, args ...interface{}) (content interface{}, err error) {
+func (t *Category) WhereOne(query interface{}, args ...interface{}) (content interface{}, err error) {
 	err = DB.Table(t.TableName()).Where(query, args...).First(&content).Error
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (t *Content) WhereOne(query interface{}, args ...interface{}) (content inte
 	return content, nil
 }
 
-func (t *Content) WhereAll(query interface{}, args ...interface{}) (contents interface{}, err error) {
+func (t *Category) WhereAll(query interface{}, args ...interface{}) (contents interface{}, err error) {
 	err = DB.Table(t.TableName()).Where(query, args...).Find(&contents).Error
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (t *Content) WhereAll(query interface{}, args ...interface{}) (contents int
 	return contents, nil
 }
 
-func (t *Content) PageList(params *ListPageInput, conditions interface{}, args ...interface{}) (contents interface{}, count int64, err error) {
+func (t *Category) PageList(params *ListPageInput, conditions interface{}, args ...interface{}) (contents interface{}, count int64, err error) {
 	offset := (params.Page - 1) * params.PageSize
 	query := DB.Table(t.TableName()).Where(conditions, args...)
 

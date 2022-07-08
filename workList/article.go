@@ -3,41 +3,44 @@ package workList
 import (
 	"errors"
 	"fmt"
+	"strings"
+
+	"gorm.io/gorm"
 
 	"golang_blog/models"
 )
 
-func (w *WorkList) CreateArticle(article *models.Article) error {
+func (w *WorkList) CreateArticle(articleParam *models.Article) error {
 	// 获取用户名
 	userName := w.ctx.Get("token").(string)
 	contentName := w.ctx.Get("content_name").(string)
 	// 通过用户名获取用户id
-	var user models.User
-	user.UserName = userName
-	if err := user.FindByName(); err != nil {
-		fmt.Println(err.Error())
+	query := []string{"user_name = ?"}
+	args := []interface{}{userName}
+	user, err := models.NewUser().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil {
 		return err
 	}
+
 	// 获取分类名
 	// 通过用户id与分类名查询有无此分类
-	var content models.Content
-	content.UserID = user.ID
-	content.ContentName = contentName
-	if err := content.FindByUserIdAndContentName(); err != nil {
-		fmt.Println(err.Error())
+	query = []string{"user_id = ?", "content_name = ?"}
+	args = []interface{}{user.(*models.User).ID, contentName}
+	content, err := models.NewContent().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil {
 		return err
 	}
+
 	// 查询有无此文章
-	article.ContentID = content.ID
-	article.UserID = user.ID
-	if err := article.FindByUserIdAndContentIdAndArticleName(); err == nil {
-		return errors.New("此文章已存在，不可重复创建")
+	query = []string{"user_id = ?", "content_id = ?", "article_name = ?"}
+	args = []interface{}{user.(*models.User).ID, content.(*models.Content).ID, articleParam.ArticleName}
+	article, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
 	}
 	// 若没有，则插入文章
-	if err := article.Create(); err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
+	data := &models.Article{}
+	models.NewArticle().Insert(data)
 	return nil
 }
 
@@ -113,14 +116,15 @@ func (w *WorkList) UpdateArticle(article *models.Article) error {
 	return nil
 }
 
-func (w *WorkList) GetAllArticle(article *models.Article) ([]*models.Article, error) {
+func (w *WorkList) GetAllArticle(articleParam *models.Article) ([]*models.Article, error) {
 	// 直接查询
-	articleList, err := article.Find()
+	query := []string{"1 = ?"}
+	args := []interface{}{1}
+	articleList, err := models.NewArticle().WhereAll(strings.Join(query, " AND "), args...)
 	if err != nil {
-		fmt.Println(err.Error())
-		return articleList, err
+		return nil, err
 	}
-	return articleList, nil
+	return articleList.([]*models.Article), nil
 }
 
 func (w *WorkList) GetArticle(article *models.Article) error {
