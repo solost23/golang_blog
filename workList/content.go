@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"log"
 
-	"golang_blog/model"
+	"golang_blog/models"
 )
 
-func (w *WorkList) CreateContent(content *model.Content) error {
+func (w *WorkList) CreateContent(content *models.Content) error {
 	// 通过用户名字获取用户id
-	var user model.User
+	var user models.User
 	user.UserName = w.ctx.Get("token").(string)
 	fmt.Println(user)
 	if err := user.FindByName(); err != nil {
@@ -31,9 +31,9 @@ func (w *WorkList) CreateContent(content *model.Content) error {
 	return nil
 }
 
-func (w *WorkList) DeleteContent(content *model.Content) error {
+func (w *WorkList) DeleteContent(content *models.Content) error {
 	// 通过名字获取用户id
-	var user model.User
+	var user models.User
 	user.UserName = w.ctx.Get("token").(string)
 	if err := user.FindByName(); err != nil {
 		fmt.Println(err.Error())
@@ -55,14 +55,14 @@ func (w *WorkList) DeleteContent(content *model.Content) error {
 	return nil
 }
 
-func (w *WorkList) UpdateContent(content *model.Content) error {
-	var user model.User
+func (w *WorkList) UpdateContent(content *models.Content) error {
+	var user models.User
 	user.UserName = w.ctx.Get("token").(string)
 	if err := user.FindByName(); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
-	var tmpContent model.Content
+	var tmpContent models.Content
 	tmpContent.UserID = user.ID
 	tmpContent.ContentName = content.ContentName
 	if err := tmpContent.FindByUserIdAndContentName(); err != nil {
@@ -78,7 +78,7 @@ func (w *WorkList) UpdateContent(content *model.Content) error {
 	return nil
 }
 
-func (w *WorkList) GetAllContent(content *model.Content) ([]*model.Content, error) {
+func (w *WorkList) GetAllContent(content *models.Content) ([]*models.Content, error) {
 	// 直接查询就可以
 	log.Println("in content DB")
 	contentList, err := content.Find()

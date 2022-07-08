@@ -4,15 +4,15 @@ import (
 	"errors"
 	"fmt"
 
-	"golang_blog/model"
+	"golang_blog/models"
 )
 
-func (w *WorkList) CreateArticle(article *model.Article) error {
+func (w *WorkList) CreateArticle(article *models.Article) error {
 	// 获取用户名
 	userName := w.ctx.Get("token").(string)
 	contentName := w.ctx.Get("content_name").(string)
 	// 通过用户名获取用户id
-	var user model.User
+	var user models.User
 	user.UserName = userName
 	if err := user.FindByName(); err != nil {
 		fmt.Println(err.Error())
@@ -20,7 +20,7 @@ func (w *WorkList) CreateArticle(article *model.Article) error {
 	}
 	// 获取分类名
 	// 通过用户id与分类名查询有无此分类
-	var content model.Content
+	var content models.Content
 	content.UserID = user.ID
 	content.ContentName = contentName
 	if err := content.FindByUserIdAndContentName(); err != nil {
@@ -41,20 +41,20 @@ func (w *WorkList) CreateArticle(article *model.Article) error {
 	return nil
 }
 
-func (w *WorkList) DeleteArticle(article *model.Article) error {
+func (w *WorkList) DeleteArticle(article *models.Article) error {
 	// 获取用户名和分类名
 	userName := w.ctx.Get("token").(string)
 	contentName := w.ctx.Get("content_name").(string)
 	articleName := w.ctx.Get("article_name").(string)
 	// 查询用户id
-	var user model.User
+	var user models.User
 	user.UserName = userName
 	if err := user.FindByName(); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
 	// 查询分类是否存在
-	var content model.Content
+	var content models.Content
 	content.UserID = user.ID
 	content.ContentName = contentName
 	if err := content.FindByNameAndUserId(); err != nil {
@@ -77,24 +77,24 @@ func (w *WorkList) DeleteArticle(article *model.Article) error {
 	return nil
 }
 
-func (w *WorkList) UpdateArticle(article *model.Article) error {
+func (w *WorkList) UpdateArticle(article *models.Article) error {
 	userName := w.ctx.Get("token").(string)
 	contentName := w.ctx.Get("content_name").(string)
 	articleName := w.ctx.Get("article_name").(string)
-	var user model.User
+	var user models.User
 	user.UserName = userName
 	if err := user.FindByName(); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
-	var content model.Content
+	var content models.Content
 	content.UserID = user.ID
 	content.ContentName = contentName
 	if err := content.FindByNameAndUserId(); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
-	var tmpArticle model.Article
+	var tmpArticle models.Article
 	tmpArticle.UserID = user.ID
 	tmpArticle.ContentID = content.ID
 	tmpArticle.ArticleName = articleName
@@ -113,7 +113,7 @@ func (w *WorkList) UpdateArticle(article *model.Article) error {
 	return nil
 }
 
-func (w *WorkList) GetAllArticle(article *model.Article) ([]*model.Article, error) {
+func (w *WorkList) GetAllArticle(article *models.Article) ([]*models.Article, error) {
 	// 直接查询
 	articleList, err := article.Find()
 	if err != nil {
@@ -123,19 +123,19 @@ func (w *WorkList) GetAllArticle(article *model.Article) ([]*model.Article, erro
 	return articleList, nil
 }
 
-func (w *WorkList) GetArticle(article *model.Article) error {
+func (w *WorkList) GetArticle(article *models.Article) error {
 	userName := w.ctx.Get("user_name").(string)
 	contentName := w.ctx.Get("content_name").(string)
 	articleName := w.ctx.Get("article_name").(string)
 	// 通过用户名查找到userid
-	var user model.User
+	var user models.User
 	user.UserName = userName
 	if err := user.FindByName(); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
 	// 通过contentName And Userid 查找到content.id
-	var content model.Content
+	var content models.Content
 	content.UserID = user.ID
 	content.ContentName = contentName
 	if err := content.FindByNameAndUserId(); err != nil {

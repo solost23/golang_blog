@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/labstack/echo/v4"
 
-	"golang_blog/model"
+	"golang_blog/models"
 	"golang_blog/mysql"
 	"golang_blog/workList"
 )
@@ -19,8 +19,8 @@ import (
 func getAllComment(c echo.Context) error {
 	articleID := c.Param("article_id")
 	c.Set("article_id", articleID)
-	var comment model.Comment
-	var commentList []*model.Comment
+	var comment models.Comment
+	var commentList []*models.Comment
 	var DB = mysql.DB
 	commentList, err := workList.NewWorkList(c, DB).GetAllComment(&comment)
 	if err != nil {
@@ -35,7 +35,7 @@ func getAllComment(c echo.Context) error {
 // @Description create comment
 // @Tags Comment
 // @Security ApiKeyAuth
-// @Param data body model.Comment true "评论"
+// @Param data body models.Comment true "评论"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -47,7 +47,7 @@ func createComment(c echo.Context) error {
 	c.Set("user_name", userName)
 	c.Set("article_id", articleID)
 	c.Set("parent_id", parentID)
-	var comment model.Comment
+	var comment models.Comment
 	if err := c.Bind(&comment); err != nil {
 		Render(c, err)
 		return err
@@ -74,7 +74,7 @@ func deleteComment(c echo.Context) error {
 	commentID := c.Param("comment_id")
 	c.Set("user_name", userName)
 	c.Set("comment_id", commentID)
-	var comment = new(model.Comment)
+	var comment = new(models.Comment)
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).DeleteComment(comment); err != nil {
 		Render(c, err)

@@ -7,7 +7,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"golang_blog/model"
+	"golang_blog/models"
 	"golang_blog/mysql"
 	"golang_blog/workList"
 )
@@ -15,13 +15,13 @@ import (
 // @Summary register
 // @Description register
 // @Tags User
-// @Param data body model.User true "用户"
+// @Param data body models.User true "用户"
 // @Accept json
 // @Produce json
 // @Success 200
 // @Router /register [post]
 func reg(c echo.Context) error {
-	var user model.User
+	var user models.User
 	if err := c.Bind(&user); err != nil {
 		Render(c, err)
 		return err
@@ -40,14 +40,14 @@ func reg(c echo.Context) error {
 // @Summary login
 // @Description login
 // @Tags User
-// @Param data body model.User true "用户"
+// @Param data body models.User true "用户"
 // @Accept json
 // @Produce json
 // @Success 200
 // @Router /login [post]
 func login(c echo.Context) error {
 	// 数据绑定
-	var user model.User
+	var user models.User
 	if err := c.Bind(&user); err != nil {
 
 		return err
@@ -72,7 +72,7 @@ func login(c echo.Context) error {
 // @Description update user
 // @Tags User
 // @Security ApiKeyAuth
-// @Param data body model.User true "用户"
+// @Param data body models.User true "用户"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -80,7 +80,7 @@ func login(c echo.Context) error {
 func updateUser(c echo.Context) error {
 	userName := c.Param("user_name")
 	c.Set("user_name", userName)
-	var user model.User
+	var user models.User
 	if err := c.Bind(&user); err != nil {
 		Render(c, err)
 		return err
@@ -105,7 +105,7 @@ func updateUser(c echo.Context) error {
 func deleteUser(c echo.Context) error {
 	userName := c.Param("user_name")
 	c.Set("user_name", userName)
-	var user model.User
+	var user models.User
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).DeleteUser(&user); err != nil {
 		Render(c, err)

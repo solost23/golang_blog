@@ -66,7 +66,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Article"
+                            "$ref": "#/definitions/models.Article"
                         }
                     }
                 ],
@@ -102,7 +102,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Article"
+                            "$ref": "#/definitions/models.Article"
                         }
                     }
                 ],
@@ -236,7 +236,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Comment"
+                            "$ref": "#/definitions/models.Comment"
                         }
                     }
                 ],
@@ -295,7 +295,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Content"
+                            "$ref": "#/definitions/models.Content"
                         }
                     }
                 ],
@@ -329,7 +329,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Content"
+                            "$ref": "#/definitions/models.Content"
                         }
                     }
                 ],
@@ -428,7 +428,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 ],
@@ -464,7 +464,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 ],
@@ -523,7 +523,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.CasbinModel"
+                            "$ref": "#/definitions/models.CasbinModel"
                         }
                     }
                 ],
@@ -607,7 +607,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 ],
@@ -643,7 +643,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Article": {
+        "models.Article": {
             "type": "object",
             "properties": {
                 "article_content": {
@@ -671,7 +671,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.CasbinModel": {
+        "models.CasbinModel": {
             "type": "object",
             "properties": {
                 "method": {
@@ -688,7 +688,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Comment": {
+        "models.Comment": {
             "type": "object",
             "properties": {
                 "articleID": {
@@ -717,7 +717,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Content": {
+        "models.Content": {
             "type": "object",
             "properties": {
                 "content_name": {
@@ -741,7 +741,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.User": {
+        "models.User": {
             "type": "object",
             "properties": {
                 "createTime": {

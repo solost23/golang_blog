@@ -2,55 +2,58 @@ package workList
 
 import (
 	"errors"
+	"strings"
+
 	"gorm.io/gorm"
 
-	"golang_blog/model"
+	"golang_blog/models"
 )
 
-func (w *WorkList) AddRoleAuth(casbinModel *model.CasbinModel) error {
-	// 先查询本条数据是否存在
-	// 若不存在，则插入
-	if err := casbinModel.FindByRolePathMethod(casbinModel.RoleName, casbinModel.Path, casbinModel.Method); err != nil {
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return err
-		}
+func (w *WorkList) AddRoleAuth(casbinModelParam *models.CasbinModel) error {
+	query := []string{"v0 = ?", "v1 = ?", "v2 = ?"}
+	args := []interface{}{casbinModelParam.RoleName, casbinModelParam.Path, casbinModelParam.Method}
+	_, err := models.NewCasbinModel().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
 	}
-	if err := casbinModel.Create(); err != nil {
+	if err = models.NewCasbinModel().Insert(casbinModelParam); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (w *WorkList) DeleteRoleAuth(casbinModel *model.CasbinModel) error {
+func (w *WorkList) DeleteRoleAuth(casbinModelParam *models.CasbinModel) error {
 	// 先查询本条数据是否存在
 	// 若存在，则删除
-	if err := casbinModel.FindByRolePathMethod(casbinModel.RoleName, casbinModel.Path, casbinModel.Method); err != nil {
+	query := []string{"v0 = ?", "v1 = ?", "v2 = ?"}
+	args := []interface{}{casbinModelParam.RoleName, casbinModelParam.Path, casbinModelParam.Method}
+	_, err := models.NewCasbinModel().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
-	if err := casbinModel.Delete(); err != nil {
+	if err = models.NewCasbinModel().Delete(strings.Join(query, " AND "), args...); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (w *WorkList) GetAllRoleAuth(casbinModel *model.CasbinModel) ([]*model.CasbinModel, error) {
+func (w *WorkList) GetAllRoleAuth(casbinModelParam *models.CasbinModel) ([]*models.CasbinModel, error) {
 	// 直接获取所有
-	casbinModelList, err := casbinModel.Find()
+	casbinModelList, err := models.NewCasbinModel().WhereAll(nil, nil)
 	if err != nil {
-		return casbinModelList, err
+		return nil, err
 	}
-	return casbinModelList, nil
+	return casbinModelList.([]*models.CasbinModel), nil
 }
 
-func (w *WorkList) GetRoleAuth(casbinModel *model.CasbinModel) ([]*model.CasbinModel, error) {
+func (w *WorkList) GetRoleAuth(casbinModelParam *models.CasbinModel) ([]*models.CasbinModel, error) {
 	// 直接查找，若找不到，返回错误
 	roleName := w.ctx.Get("role_name").(string)
-	res, err := casbinModel.FindByRoleName(roleName)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return res, err
-		}
-		return res, err
+	query := []string{"v0 = ?"}
+	args := []interface{}{roleName}
+	casbinModels, err := models.NewCasbinModel().WhereAll(strings.Join(query, " AND "), args...)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
 	}
-	return res, nil
+	return casbinModels.([]*models.CasbinModel), nil
 }

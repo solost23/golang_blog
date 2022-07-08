@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"golang_blog/model"
+	"golang_blog/models"
 	"golang_blog/router"
 )
 
@@ -17,17 +17,17 @@ import (
 // @schemes http https
 // @BasePath /
 func main() {
-	var DB = model.DB
-	if err := DB.AutoMigrate(&model.User{}); err != nil {
+	var DB = models.DB
+	if err := DB.AutoMigrate(&models.User{}); err != nil {
 		panic(err.Error())
 	}
-	if err := DB.AutoMigrate(&model.Content{}); err != nil {
+	if err := DB.AutoMigrate(&models.Content{}); err != nil {
 		panic(err.Error())
 	}
-	if err := DB.AutoMigrate(&model.Article{}); err != nil {
+	if err := DB.AutoMigrate(&models.Article{}); err != nil {
 		panic(err.Error())
 	}
-	if err := DB.AutoMigrate(&model.Comment{}); err != nil {
+	if err := DB.AutoMigrate(&models.Comment{}); err != nil {
 		panic(err.Error())
 	}
 	s := &http.Server{

@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/labstack/echo/v4"
 
-	"golang_blog/model"
+	"golang_blog/models"
 	"golang_blog/mysql"
 	"golang_blog/workList"
 )
@@ -12,13 +12,13 @@ import (
 // @Description create roleAuth
 // @Tags Role
 // @Security ApiKeyAuth
-// @Param data body model.CasbinModel true "角色权限"
+// @Param data body models.CasbinModel true "角色权限"
 // @Accept json
 // @Produce json
 // @Success 200
 // @Router /role [post]
 func addRoleAuth(c echo.Context) error {
-	var casbinModel = new(model.CasbinModel)
+	var casbinModel = new(models.CasbinModel)
 	if err := c.Bind(casbinModel); err != nil {
 		Render(c, err)
 		return err
@@ -41,7 +41,7 @@ func addRoleAuth(c echo.Context) error {
 // @Success 200
 // @Router /role [delete]
 func deleteRoleAuth(c echo.Context) error {
-	var casbinModel = new(model.CasbinModel)
+	var casbinModel = new(models.CasbinModel)
 	if err := c.Bind(casbinModel); err != nil {
 		Render(c, err)
 		return err
@@ -64,7 +64,7 @@ func deleteRoleAuth(c echo.Context) error {
 // @Success 200
 // @Router /role [get]
 func getAllRoleAuth(c echo.Context) error {
-	var casbinModel = new(model.CasbinModel)
+	var casbinModel = new(models.CasbinModel)
 	var DB = mysql.DB
 	casbinModelList, err := workList.NewWorkList(c, DB).GetAllRoleAuth(casbinModel)
 	if err != nil {
@@ -85,7 +85,7 @@ func getAllRoleAuth(c echo.Context) error {
 func getRoleAuth(c echo.Context) error {
 	roleName := c.Param("role_name")
 	c.Set("role_name", roleName)
-	var casbinModel = new(model.CasbinModel)
+	var casbinModel = new(models.CasbinModel)
 	var DB = mysql.DB
 	casbinModelList, err := workList.NewWorkList(c, DB).GetRoleAuth(casbinModel)
 	if err != nil {

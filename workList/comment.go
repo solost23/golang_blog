@@ -7,15 +7,15 @@ import (
 
 	"gorm.io/gorm"
 
-	"golang_blog/model"
+	"golang_blog/models"
 )
 
-func (w *WorkList) GetAllComment(comment *model.Comment) ([]*model.Comment, error) {
+func (w *WorkList) GetAllComment(comment *models.Comment) ([]*models.Comment, error) {
 	articleID := w.ctx.Get("article_id").(string)
 	// 先查一遍articleID是否有这篇文章，如果没有则直接返回错误
 	// 如果有，则调用返回评论按钮
-	var res []*model.Comment
-	var article model.Article
+	var res []*models.Comment
+	var article models.Article
 	articleIDInt, err := strconv.Atoi(articleID)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -35,7 +35,7 @@ func (w *WorkList) GetAllComment(comment *model.Comment) ([]*model.Comment, erro
 	return res, nil
 }
 
-func (w *WorkList) CreateComment(comment *model.Comment) error {
+func (w *WorkList) CreateComment(comment *models.Comment) error {
 	userName := w.ctx.Get("user_name")
 	articleID := w.ctx.Get("article_id")
 	parentID := w.ctx.Get("parent_id")
@@ -52,13 +52,13 @@ func (w *WorkList) CreateComment(comment *model.Comment) error {
 		fmt.Println(err.Error())
 		return err
 	}
-	var user = new(model.User)
+	var user = new(models.User)
 	user.UserName = userName.(string)
 	if err := user.FindByName(); err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
-	var article = new(model.Article)
+	var article = new(models.Article)
 	article.ID = int32(articleIDInt)
 	if err := article.FindById(); err != nil {
 		fmt.Println(err.Error())
@@ -70,7 +70,7 @@ func (w *WorkList) CreateComment(comment *model.Comment) error {
 	comment.UserID = user.ID
 	comment.ArticleID = article.ID
 	comment.ParentID = int32(parentIDInt)
-	var tmpComment = new(model.Comment)
+	var tmpComment = new(models.Comment)
 	tmpComment.ParentID = int32(parentIDInt)
 	// 查找当前父评论是否存在，若不存在，则自己就是父评论
 	if err := tmpComment.FindByID(); err != nil {
@@ -87,7 +87,7 @@ func (w *WorkList) CreateComment(comment *model.Comment) error {
 	return nil
 }
 
-func (w *WorkList) DeleteComment(comment *model.Comment) error {
+func (w *WorkList) DeleteComment(comment *models.Comment) error {
 	userName := w.ctx.Get("user_name")
 	commentID := w.ctx.Get("comment_id")
 	// 查找当前用户是否存在，若不存在，则返回错误
@@ -97,7 +97,7 @@ func (w *WorkList) DeleteComment(comment *model.Comment) error {
 		fmt.Println(err.Error())
 		return err
 	}
-	var user = new(model.User)
+	var user = new(models.User)
 	user.UserName = userName.(string)
 	if err := user.FindByName(); err != nil {
 		fmt.Println(err.Error())

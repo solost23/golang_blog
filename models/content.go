@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"errors"
@@ -34,8 +34,8 @@ func (t *Content) Delete(query interface{}, args ...interface{}) (err error) {
 	return DB.Table(t.TableName()).Where(query, args...).Delete(&t).Error
 }
 
-func (t *Content) Save(data interface{}) (err error) {
-	return DB.Table(t.TableName()).Save(&t).Error
+func (t *Content) Save(data interface{}, query interface{}, args ...interface{}) (err error) {
+	return DB.Table(t.TableName()).Where(query, args...).Save(&t).Error
 }
 
 func (t *Content) WhereOne(query interface{}, args ...interface{}) (content interface{}, err error) {

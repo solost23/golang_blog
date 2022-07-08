@@ -3,87 +3,87 @@ package workList
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"gorm.io/gorm"
 
 	"golang_blog/middleware/jwt"
-	"golang_blog/model"
+	"golang_blog/models"
 )
 
-func (w *WorkList) Reg(user *model.User) error {
+func (w *WorkList) Reg(userParam *models.User) error {
 	// 查看用户是否存在
 	// 若存在，则返回错误
-	if err := user.FindByName(); err == nil {
+	query := []string{"user_name = ?"}
+	args := []interface{}{userParam.UserName}
+	user, err := models.NewUser().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("user data exist")
 	}
 	// 若不存在，则创建
-	user.PassWord = model.NewMd5(user.PassWord, "ty")
-	if err := user.Create(); err != nil {
-		fmt.Println(err.Error())
+	userParam.PassWord = models.NewMd5(userParam.PassWord, "ty")
+	if err = models.NewUser().Insert(user); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (w *WorkList) Login(user *model.User) (model.Token, error) {
+func (w *WorkList) Login(userParam *models.User) (models.Token, error) {
 	// 查看有无用户
 	// 如果没有直接报错
-	userName := user.UserName
-	role := user.Role
-	password := user.PassWord
-	var token model.Token
-	if err := user.FindByName(); err != nil {
-		fmt.Println(err.Error())
+	query := []string{"user_name = ?", "role = ?", "password = ?"}
+	args := []interface{}{userParam.UserName, userParam.Role, models.NewMd5(userParam.PassWord, "ty")}
+
+	var token models.Token
+	_, err := models.NewUser().WhereOne(query, args...)
+	if err != nil {
 		return token, err
 	}
-	// 如果有则检查账户名密码
-	// 如果账户名 || 密码错误，返回错误
-	if userName != user.UserName || model.NewMd5(password, "ty") != user.PassWord {
-		return token, errors.New("username or password failed")
-	}
+
 	// 否则生成一个 token
-	tokenString, err := jwt.CreateToken(userName, role)
+	tokenString, err := jwt.CreateToken(userParam.UserName, userParam.Role)
 	if err != nil {
 		fmt.Println(err.Error())
 		return token, err
 	}
-	token = model.Token{
+	token = models.Token{
 		Auth: tokenString,
 	}
 	return token, nil
 }
 
-func (w *WorkList) UpdateUser(user *model.User) error {
+func (w *WorkList) UpdateUser(userParam *models.User) error {
 	// 通过用户名查出来用户id
-	var tmpUser model.User
-	tmpUser.UserName = user.UserName
-	if err := tmpUser.FindByName(); err != nil {
-		fmt.Println(err.Error())
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return err
-		}
+	query := []string{"user_name = ?"}
+	args := []interface{}{userParam.UserName}
+	user, err := models.NewUser().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil {
 		return err
 	}
+
 	// 通过用户id更新用户信息
-	user.ID = tmpUser.ID
-	if err := user.Update(); err != nil {
-		fmt.Println(err.Error())
+	query = []string{"id = ?"}
+	args = []interface{}{user.(*models.User).ID}
+	userParam.PassWord = models.NewMd5(userParam.PassWord, "ty")
+	if err = models.NewUser().Save(userParam, query, args...); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (w *WorkList) DeleteUser(user *model.User) error {
+func (w *WorkList) DeleteUser(userParam *models.User) error {
 	userName := w.ctx.Get("user_name").(string)
 	// 通过用户名获取用户ID
-	user.UserName = userName
-	if err := user.FindByName(); err != nil {
-		fmt.Println(err.Error())
+	query := []string{"user_name = ?"}
+	args := []interface{}{userName}
+	user, err := models.NewUser().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil {
 		return err
 	}
-	// 删除用户
-	if err := user.Delete(); err != nil {
-		fmt.Println(err.Error())
+	// delete
+	query = []string{"id = ?"}
+	args = []interface{}{user.(*models.User).ID}
+	if err = models.NewUser().Delete(strings.Join(query, " AND "), args...); err != nil {
 		return err
 	}
 	return nil

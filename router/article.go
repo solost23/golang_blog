@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/labstack/echo/v4"
 
-	"golang_blog/model"
+	"golang_blog/models"
 	"golang_blog/mysql"
 	"golang_blog/workList"
 )
@@ -12,7 +12,7 @@ import (
 // @Description create article
 // @Tags Article
 // @Security ApiKeyAuth
-// @Param data body model.Article true "文章"
+// @Param data body models.Article true "文章"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -20,7 +20,7 @@ import (
 func createArticle(c echo.Context) error {
 	contentName := c.Param("content_name")
 	c.Set("content_name", contentName)
-	var article model.Article
+	var article models.Article
 	if err := c.Bind(&article); err != nil {
 		Render(c, err)
 		return err
@@ -47,7 +47,7 @@ func deleteArticle(c echo.Context) error {
 	articleName := c.Param("article_name")
 	c.Set("content_name", contentName)
 	c.Set("article_name", articleName)
-	var article model.Article
+	var article models.Article
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).DeleteArticle(&article); err != nil {
 		Render(c, err)
@@ -61,7 +61,7 @@ func deleteArticle(c echo.Context) error {
 // @Description update article
 // @Tags Article
 // @Security ApiKeyAuth
-// @Param data body model.Article true "文章"
+// @Param data body models.Article true "文章"
 // @Accept json
 // @Produce json
 // @Success 200
@@ -71,7 +71,7 @@ func updateArticle(c echo.Context) error {
 	articleName := c.Param("article_name")
 	c.Set("content_name", contentName)
 	c.Set("article_name", articleName)
-	var article model.Article
+	var article models.Article
 	if err := c.Bind(&article); err != nil {
 		Render(c, err)
 		return nil
@@ -94,8 +94,8 @@ func updateArticle(c echo.Context) error {
 // @Success 200
 // @Router /article [get]
 func getAllArticle(c echo.Context) error {
-	var article model.Article
-	var articleList []*model.Article
+	var article models.Article
+	var articleList []*models.Article
 	var DB = mysql.DB
 	articleList, err := workList.NewWorkList(c, DB).GetAllArticle(&article)
 	if err != nil {
@@ -121,7 +121,7 @@ func getArticle(c echo.Context) error {
 	c.Set("user_name", userName)
 	c.Set("content_name", contentName)
 	c.Set("article_name", articleName)
-	var article model.Article
+	var article models.Article
 	var DB = mysql.DB
 	if err := workList.NewWorkList(c, DB).GetArticle(&article); err != nil {
 		Render(c, err)

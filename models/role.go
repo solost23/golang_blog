@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"errors"
@@ -29,7 +29,7 @@ func (t *CasbinModel) Delete(query interface{}, args ...interface{}) (err error)
 	return DBCasbin.Table(t.TableName()).Where(query, args...).Delete(&t).Error
 }
 
-func (t *CasbinModel) Save(data interface{}) (err error) {
+func (t *CasbinModel) Save(data interface{}, query interface{}, args ...interface{}) (err error) {
 	return nil
 }
 

@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"errors"
@@ -36,7 +36,7 @@ func (t *User) Delete(query interface{}, args ...interface{}) (err error) {
 	return DB.Table(t.TableName()).Where(query, args...).Delete(&t).Error
 }
 
-func (t *User) Save(data interface{}) (err error) {
+func (t *User) Save(data interface{}, query interface{}, args ...interface{}) (err error) {
 	t.UpdateTime = time.Now().Unix()
 	return DB.Table(t.TableName()).Save(&t).Error
 }

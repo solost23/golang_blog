@@ -4,12 +4,12 @@ import (
 	"log"
 	"testing"
 
-	"golang_blog/model"
+	"golang_blog/models"
 )
 
 func TestWorkList_GetAllContent(t *testing.T) {
 	var workList *WorkList
-	var content *model.Content
+	var content *models.Content
 	contentList, err := workList.GetAllContent(content)
 	if err != nil {
 		log.Fatalln(err)

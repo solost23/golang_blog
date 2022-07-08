@@ -2,24 +2,25 @@ package router
 
 import (
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"golang_blog/model"
+	"golang_blog/models"
 	"golang_blog/mysql"
 	"golang_blog/workList"
+
+	"github.com/labstack/echo/v4"
 )
 
 // @Summary create content
 // @Description create a content
 // @Tags Content
 // @Security ApiKeyAuth
-// @Param data body model.Content true "分类"
+// @Param data body models.Content true "分类"
 // @Accept json
 // @Produce json
 // @Success 200
 // @Router /content [post]
 func createContent(c echo.Context) error {
 	//fmt.Println(c.Get("token"))
-	var content model.Content
+	var content models.Content
 	if err := c.Bind(&content); err != nil {
 		Render(c, err)
 		return err
@@ -42,7 +43,7 @@ func createContent(c echo.Context) error {
 // @Success 200
 // @Router /content [delete]
 func deleteContent(c echo.Context) error {
-	var content model.Content
+	var content models.Content
 	if err := c.Bind(&content); err != nil {
 		Render(c, err)
 		return err
@@ -60,13 +61,13 @@ func deleteContent(c echo.Context) error {
 // @Description update content
 // @Tags Content
 // @Security ApiKeyAuth
-// @Param data body model.Content true "分类"
+// @Param data body models.Content true "分类"
 // @Accept json
 // @Produce json
 // @Success 200
 // @Router /content [put]
 func updateContent(c echo.Context) error {
-	var content model.Content
+	var content models.Content
 	if err := c.Bind(&content); err != nil {
 		Render(c, err)
 		return err
@@ -90,8 +91,8 @@ func updateContent(c echo.Context) error {
 // @Success 200
 // @Router /content [get]
 func getAllContent(c echo.Context) error {
-	var content model.Content
-	var contentList []*model.Content
+	var content models.Content
+	var contentList []*models.Content
 	var DB = mysql.DB
 	contentList, err := workList.NewWorkList(c, DB).GetAllContent(&content)
 	if err != nil {
