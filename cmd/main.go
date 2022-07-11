@@ -17,19 +17,8 @@ import (
 // @schemes http https
 // @BasePath /
 func main() {
-	var DB = models.DB
-	if err := DB.AutoMigrate(&models.User{}); err != nil {
-		panic(err.Error())
-	}
-	if err := DB.AutoMigrate(&models.Content{}); err != nil {
-		panic(err.Error())
-	}
-	if err := DB.AutoMigrate(&models.Article{}); err != nil {
-		panic(err.Error())
-	}
-	if err := DB.AutoMigrate(&models.Comment{}); err != nil {
-		panic(err.Error())
-	}
+	// 创建数据库表
+	InitAutoMigrate()
 	s := &http.Server{
 		Addr:         "0.0.0.0:8080",
 		Handler:      router.Register(),
@@ -39,5 +28,13 @@ func main() {
 	fmt.Printf("博客服务开启, 服务地址:%s", "0.0.0.0:8080 \n")
 	if err := s.ListenAndServe(); err != nil {
 		log.Fatalln(err.Error())
+	}
+}
+
+func InitAutoMigrate() {
+	var db = models.DB
+	err := db.AutoMigrate(&models.User{}, &models.Category{}, &models.Article{}, &models.Comment{})
+	if err != nil {
+		panic(err)
 	}
 }
