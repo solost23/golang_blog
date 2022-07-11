@@ -21,7 +21,7 @@ func NewCategory() Moder {
 }
 
 func (t *Category) TableName() string {
-	return "contents"
+	return "categories"
 }
 
 func (t *Category) Insert(data interface{}) error {

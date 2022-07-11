@@ -9,8 +9,8 @@ import (
 
 type Article struct {
 	ID             int32  `gorm:"primary_key"`
-	ContentID      int32  `gorm:"column:content_id"` // 关联到 content 表
-	UserID         int32  `gorm:"column:user_id"`    // 关联到 user 表
+	CategoryID     int32  `gorm:"column:category_id"` // 关联到 categories 表
+	UserID         int32  `gorm:"column:user_id"`     // 关联到 users 表
 	ArticleName    string `gorm:"column:article_name" json:"article_name"`
 	ArticleContent string `gorm:"column:article_content" json:"article_content"`
 	CreateTime     int64  `gorm:"column:create_time"`

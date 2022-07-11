@@ -2,7 +2,6 @@ package workList
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"gorm.io/gorm"
@@ -11,106 +10,46 @@ import (
 )
 
 func (w *WorkList) CreateArticle(articleParam *models.Article) error {
-	// 获取用户名
-	userName := w.ctx.Get("token").(string)
-	contentName := w.ctx.Get("content_name").(string)
-	// 通过用户名获取用户id
-	query := []string{"user_name = ?"}
-	args := []interface{}{userName}
-	user, err := models.NewUser().WhereOne(strings.Join(query, " AND "), args...)
+	// base logic: 查询用户 && 查询分类是否存在, 如果都存在，那么新建
+	query := []string{"user_id = ?", "category_id = ?"}
+	args := []interface{}{articleParam.UserID, articleParam.CategoryID}
+	_, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
+	}
+	err = models.NewArticle().Insert(articleParam)
 	if err != nil {
-		return err
-	}
-
-	// 获取分类名
-	// 通过用户id与分类名查询有无此分类
-	query = []string{"user_id = ?", "content_name = ?"}
-	args = []interface{}{user.(*models.User).ID, contentName}
-	content, err := models.NewContent().WhereOne(strings.Join(query, " AND "), args...)
-	if err != nil {
-		return err
-	}
-
-	// 查询有无此文章
-	query = []string{"user_id = ?", "content_id = ?", "article_name = ?"}
-	args = []interface{}{user.(*models.User).ID, content.(*models.Content).ID, articleParam.ArticleName}
-	article, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return err
-	}
-	// 若没有，则插入文章
-	data := &models.Article{}
-	models.NewArticle().Insert(data)
-	return nil
-}
-
-func (w *WorkList) DeleteArticle(article *models.Article) error {
-	// 获取用户名和分类名
-	userName := w.ctx.Get("token").(string)
-	contentName := w.ctx.Get("content_name").(string)
-	articleName := w.ctx.Get("article_name").(string)
-	// 查询用户id
-	var user models.User
-	user.UserName = userName
-	if err := user.FindByName(); err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
-	// 查询分类是否存在
-	var content models.Content
-	content.UserID = user.ID
-	content.ContentName = contentName
-	if err := content.FindByNameAndUserId(); err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
-	// 从文章表中查询文章是否存在
-	article.UserID = user.ID
-	article.ContentID = content.ID
-	article.ArticleName = articleName
-	if err := article.FindByUserIdAndContentIdAndArticleName(); err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
-	// 通过文章id删除文章
-	if err := article.Delete(); err != nil {
-		fmt.Println(err.Error())
 		return err
 	}
 	return nil
 }
 
-func (w *WorkList) UpdateArticle(article *models.Article) error {
-	userName := w.ctx.Get("token").(string)
-	contentName := w.ctx.Get("content_name").(string)
-	articleName := w.ctx.Get("article_name").(string)
-	var user models.User
-	user.UserName = userName
-	if err := user.FindByName(); err != nil {
-		fmt.Println(err.Error())
+func (w *WorkList) DeleteArticle(articleParam *models.Article) error {
+	// base login: 查询文章是否存在，不存在则报错
+	// 存在则删除
+	query := []string{"id = ?"}
+	args := []interface{}{articleParam.ID}
+	_, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
-	var content models.Content
-	content.UserID = user.ID
-	content.ContentName = contentName
-	if err := content.FindByNameAndUserId(); err != nil {
-		fmt.Println(err.Error())
+	err = models.NewArticle().Delete(strings.Join(query, " AND "), args...)
+	if err != nil {
 		return err
 	}
-	var tmpArticle models.Article
-	tmpArticle.UserID = user.ID
-	tmpArticle.ContentID = content.ID
-	tmpArticle.ArticleName = articleName
-	if err := tmpArticle.FindByUserIdAndContentIdAndArticleName(); err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
+	return nil
+}
 
-	article.ID = tmpArticle.ID
-	article.UserID = user.ID
-	article.ContentID = content.ID
-	if err := article.Update(); err != nil {
-		fmt.Println(err.Error())
+func (w *WorkList) UpdateArticle(articleParam *models.Article) error {
+	// 查看有无此文章，有则更新
+	query := []string{"id = ?"}
+	args := []interface{}{articleParam.ID}
+	_, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
+	}
+	err = models.NewArticle().Save(articleParam, strings.Join(query, " AND "), args...)
+	if err != nil {
 		return err
 	}
 	return nil
@@ -127,32 +66,13 @@ func (w *WorkList) GetAllArticle(articleParam *models.Article) ([]*models.Articl
 	return articleList.([]*models.Article), nil
 }
 
-func (w *WorkList) GetArticle(article *models.Article) error {
-	userName := w.ctx.Get("user_name").(string)
-	contentName := w.ctx.Get("content_name").(string)
-	articleName := w.ctx.Get("article_name").(string)
-	// 通过用户名查找到userid
-	var user models.User
-	user.UserName = userName
-	if err := user.FindByName(); err != nil {
-		fmt.Println(err.Error())
-		return err
+func (w *WorkList) GetArticle(articleParam *models.Article) (*models.Article, error) {
+	// 直接查询并返回数据
+	query := []string{"id = ?"}
+	args := []interface{}{articleParam.ID}
+	article, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
 	}
-	// 通过contentName And Userid 查找到content.id
-	var content models.Content
-	content.UserID = user.ID
-	content.ContentName = contentName
-	if err := content.FindByNameAndUserId(); err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
-	article.UserID = user.ID
-	article.ContentID = content.ID
-	article.ArticleName = articleName
-	// 通过userid 和分类名字和文章名字去查询文章内容
-	if err := article.FindByUserIdAndContentIdAndArticleName(); err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
-	return nil
+	return article.(*models.Article), nil
 }
