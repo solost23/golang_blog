@@ -64,26 +64,3 @@ func (t *CasbinModel) PageList(params *ListPageInput, conditions interface{}, ar
 	}
 	return casbinModels, count, nil
 }
-
-//func (c *CasbinModel) FindByRoleName(roleName string) ([]*CasbinModel, error) {
-//	var res []*CasbinModel
-//	if err := DBCasbin.Table(c.TableName()).Where("v0=?", roleName).Find(&res).Error; err != nil {
-//		return res, err
-//	}
-//	return res, nil
-//}
-//
-//func (c *CasbinModel) Find() ([]*CasbinModel, error) {
-//	var res []*CasbinModel
-//	if err := DBCasbin.Table(c.TableName()).Find(&res).Error; err != nil {
-//		return res, err
-//	}
-//	return res, nil
-//}
-//
-//func (c *CasbinModel) FindByRolePathMethod(roleName, path, method string) error {
-//	if err := DBCasbin.Table(c.TableName()).Where("v0=? AND v1=? AND v2=?", roleName, path, method).First(c).Error; err != nil {
-//		return err
-//	}
-//	return nil
-//}

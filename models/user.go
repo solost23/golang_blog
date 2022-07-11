@@ -72,29 +72,3 @@ func (t *User) PageList(params *ListPageInput, conditions interface{}, args ...i
 	}
 	return users, count, nil
 }
-
-//func (u *User) Update() error {
-//	u.UpdateTime = time.Now().Unix()
-//	if err := DB.Table("user").Omit("id", "password").Where("id=?", u.ID).Save(u).Error; err != nil {
-//		return err
-//	}
-//	return nil
-//}
-//
-//func (u *User) FindById() error {
-//	if err := DB.Table("user").Where("id=?", u.ID).First(u).Error; err != nil {
-//		if err == gorm.ErrRecordNotFound {
-//			return err
-//		}
-//	}
-//	return nil
-//}
-//
-//func (u *User) FindByName() error {
-//	if err := DB.Table("user").Where("user_name=?", u.UserName).First(u).Error; err != nil {
-//		if err == gorm.ErrRecordNotFound {
-//			return err
-//		}
-//	}
-//	return nil
-//}

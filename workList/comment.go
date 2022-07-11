@@ -4,35 +4,37 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"gorm.io/gorm"
 
 	"golang_blog/models"
 )
 
-func (w *WorkList) GetAllComment(comment *models.Comment) ([]*models.Comment, error) {
+func (w *WorkList) GetAllComment(commentParam *models.Comment) ([]*models.Comment, error) {
 	articleID := w.ctx.Get("article_id").(string)
 	// 先查一遍articleID是否有这篇文章，如果没有则直接返回错误
-	// 如果有，则调用返回评论按钮
-	var res []*models.Comment
-	var article models.Article
-	articleIDInt, err := strconv.Atoi(articleID)
+	// 如果有，则返回此篇文章的所有评论
+	articleIdInt, err := strconv.Atoi(articleID)
 	if err != nil {
-		fmt.Println(err.Error())
-		return res, err
+		return nil, err
 	}
-	article.ID = int32(articleIDInt)
-	if err := article.FindById(); err != nil {
-		fmt.Println(err.Error())
-		return res, err
+
+	query := []string{"id = ?"}
+	args := []interface{}{articleIdInt}
+	_, err = models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
 	}
-	comment.ArticleID = article.ID
-	res, err = comment.Find()
-	if err != nil {
-		fmt.Println(err.Error())
-		return res, err
+
+	query = []string{"article_id = ?", "is_thumbs_up = ?"}
+	args = []interface{}{commentParam.ArticleID, commentParam.IsThumbsUp}
+	comments, err := models.NewComment().WhereAll(strings.Join(query, " AND "), args...)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
 	}
-	return res, nil
+	return comments.([]*models.Comment), nil
+
 }
 
 func (w *WorkList) CreateComment(comment *models.Comment) error {
@@ -94,23 +96,19 @@ func (w *WorkList) DeleteComment(comment *models.Comment) error {
 	// 查找当前用户是否有此评论，如果有，则删除
 	commentIDInt, err := strconv.Atoi(commentID.(string))
 	if err != nil {
-		fmt.Println(err.Error())
 		return err
 	}
 	var user = new(models.User)
 	user.UserName = userName.(string)
 	if err := user.FindByName(); err != nil {
-		fmt.Println(err.Error())
 		return err
 	}
 	comment.ID = int32(commentIDInt)
 	comment.UserID = user.ID
 	if err := comment.FindByIDAndUserID(); err != nil {
-		fmt.Println(err.Error())
 		return err
 	}
 	if err := comment.Delete(); err != nil {
-		fmt.Println(err.Error())
 		return err
 	}
 	return nil

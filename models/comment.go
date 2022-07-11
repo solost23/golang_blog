@@ -71,25 +71,3 @@ func (t *Comment) PageList(params *ListPageInput, conditions interface{}, args .
 	}
 	return comments, count, nil
 }
-
-//func (c *Comment) Find() ([]*Comment, error) {
-//	var res []*Comment
-//	if err := DB.Table("comment").Where("article_id=?", c.ArticleID).Find(&res).Error; err != nil {
-//		return res, err
-//	}
-//	return res, nil
-//}
-//
-//func (c *Comment) FindByIDAndUserID() error {
-//	if err := DB.Table("comment").Where("id=? AND user_id=?", c.ID, c.UserID).First(c).Error; err != nil {
-//		return err
-//	}
-//	return nil
-//}
-//
-//func (c *Comment) FindByID() error {
-//	if err := DB.Table("comment").Where("id=?", c.ParentID).First(c).Error; err != nil {
-//		return err
-//	}
-//	return nil
-//}

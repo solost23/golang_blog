@@ -7,10 +7,10 @@ import (
 	"golang_blog/models"
 )
 
-func TestWorkList_GetAllContent(t *testing.T) {
+func TestWorkList_GetAllCategory(t *testing.T) {
 	var workList *WorkList
-	var content *models.Content
-	contentList, err := workList.GetAllContent(content)
+	var category *models.Category
+	contentList, err := workList.GetAllCategory(category)
 	if err != nil {
 		log.Fatalln(err)
 	}

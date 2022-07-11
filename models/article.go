@@ -71,26 +71,3 @@ func (t *Article) PageList(params *ListPageInput, conditions interface{}, args .
 	}
 	return articles, count, nil
 }
-
-// 根据文章名查文章id
-//func (a *Article) FindByName(articleName string) error {
-//	if err := DB.Table("article").Where("article_name=?", a.ArticleName).First(a).Error; err != nil {
-//		return err
-//	}
-//	return nil
-//}
-//
-//// 根据id查文章名称
-//func (a *Article) FindById() error {
-//	if err := DB.Table("article").Where("id=?", a.ID).First(a).Error; err != nil {
-//		return err
-//	}
-//	return nil
-//}
-//
-//func (a *Article) FindByUserIdAndContentIdAndArticleName() error {
-//	if err := DB.Table("article").Where("user_id=? AND content_id=? AND article_name=?", a.UserID, a.ContentID, a.ArticleName).First(a).Error; err != nil {
-//		return err
-//	}
-//	return nil
-//}
