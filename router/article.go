@@ -16,7 +16,7 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /article/{content_name} [get]
+// @Router /article/{category_name} [post]
 func createArticle(c echo.Context) error {
 	contentName := c.Param("content_name")
 	c.Set("content_name", contentName)
@@ -113,17 +113,16 @@ func getAllArticle(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /article/{user_name}/{content_name}/{article_name} [get]
+// @Router /article/{user_id}/{category_id}/{article_id} [get]
 func getArticle(c echo.Context) error {
-	userName := c.Param("user_name")
-	contentName := c.Param("content_name")
-	articleName := c.Param("article_name")
-	c.Set("user_name", userName)
-	c.Set("content_name", contentName)
-	c.Set("article_name", articleName)
-	var article models.Article
+	var articleParam = new(models.Article)
+	if err := c.Bind(&articleParam); err != nil {
+		Render(c, err)
+		return err
+	}
 	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).GetArticle(&article); err != nil {
+	article, err := workList.NewWorkList(c, DB).GetArticle(articleParam)
+	if err != nil {
 		Render(c, err)
 		return err
 	}

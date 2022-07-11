@@ -1,7 +1,6 @@
 package router
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -29,7 +28,6 @@ func reg(c echo.Context) error {
 	var DB = mysql.DB
 	err := workList.NewWorkList(c, DB).Reg(&user)
 	if err != nil {
-		log.Println(err.Error())
 		Render(c, err)
 		return err
 	}
@@ -49,7 +47,6 @@ func login(c echo.Context) error {
 	// 数据绑定
 	var user models.User
 	if err := c.Bind(&user); err != nil {
-
 		return err
 	}
 	var DB = mysql.DB
@@ -101,13 +98,15 @@ func updateUser(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /user/{user_name} [delete]
+// @Router /user [delete]
 func deleteUser(c echo.Context) error {
-	userName := c.Param("user_name")
-	c.Set("user_name", userName)
-	var user models.User
+	var userParam = new(models.User)
+	if err := c.Bind(&userParam); err != nil {
+		Render(c, err)
+		return err
+	}
 	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).DeleteUser(&user); err != nil {
+	if err := workList.NewWorkList(c, DB).DeleteUser(userParam); err != nil {
 		Render(c, err)
 		return err
 	}

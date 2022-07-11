@@ -72,18 +72,11 @@ func (w *WorkList) UpdateUser(userParam *models.User) error {
 }
 
 func (w *WorkList) DeleteUser(userParam *models.User) error {
-	userName := w.ctx.Get("user_name").(string)
-	// 通过用户名获取用户ID
-	query := []string{"user_name = ?"}
-	args := []interface{}{userName}
-	user, err := models.NewUser().WhereOne(strings.Join(query, " AND "), args...)
-	if err != nil {
-		return err
-	}
-	// delete
-	query = []string{"id = ?"}
-	args = []interface{}{user.(*models.User).ID}
-	if err = models.NewUser().Delete(strings.Join(query, " AND "), args...); err != nil {
+	// 查找此用户id是否存在，存在则删除用户
+	query := []string{"id = ?"}
+	args := []interface{}{userParam.ID}
+	err := models.NewUser().Delete(strings.Join(query, " AND"), args...)
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
 	return nil
