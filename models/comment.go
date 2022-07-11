@@ -8,10 +8,10 @@ import (
 )
 
 type Comment struct {
-	ID             int32  `gorm:"primary_key"`
-	UserID         int32  `gorm:"column:user_id"`
-	ArticleID      int32  `gorm:"column:article_id"`
-	ParentID       int32  `gorm:"column:parent_id"`
+	ID             int32  `gorm:"primary_key" json:"id"`
+	UserID         int32  `gorm:"column:user_id" json:"user_id"`
+	ArticleID      int32  `gorm:"column:article_id" json:"article_id"`
+	ParentID       int32  `gorm:"column:parent_id" json:"parent_id"`
 	CommentContent string `gorm:"column:comment_content" json:"comment_content"`
 	IsThumbsUp     string `gorm:"column:is_thumbs_up;type:enum('COMMENT','THUMBSUP');default:'THUMBSUP'" json:"is_thumbs_up"`
 	CreateTime     int64  `gorm:"column:create_time"`
