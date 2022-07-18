@@ -16,15 +16,15 @@ import (
 type ErrCode int
 
 func RegisterNoAuth(group *echo.Group) {
-	group.POST("/register", reg)
-	group.POST("/login", login)
+	group.POST("register", reg)
+	group.POST("login", login)
 }
 
 func RegisterAuth(group *echo.Group) {
 	group.Use(jwt.JWTAuth)
 	RegisterUser(group)
 	RegisterArticle(group)
-	RegisterContent(group)
+	RegisterCategory(group)
 	RegisterComment(group)
 
 	group.Use(role.AuthCheckRole)
@@ -32,53 +32,52 @@ func RegisterAuth(group *echo.Group) {
 }
 
 func RegisterUser(group *echo.Group) {
-	user := group.Group("/user")
+	user := group.Group("user")
 	{
 		// 修改用户信息
-		user.PUT("/:user_name", updateUser)
+		user.PUT(":user_id", updateUser)
 		// 删除用户信息
-		user.DELETE("/:user_name", deleteUser)
+		user.DELETE(":user_id", deleteUser)
 	}
 }
 
 func RegisterArticle(group *echo.Group) {
-	article := group.Group("/article")
+	article := group.Group("article")
 	{
 		article.GET("", getAllArticle)
-		// 看单篇文章可能要看别人的，所以要通过路径参数传用户名
-		article.GET("/:user_name/:content_name/:article_name", getArticle)
-		article.POST("/:content_name", createArticle)
-		article.DELETE("/:content_name/:article_name", deleteArticle)
-		article.PUT("/:content_name/:article_name", updateArticle)
+		article.GET(":article_id", getArticle)
+		article.POST("", createArticle)
+		article.DELETE(":article_id", deleteArticle)
+		article.PUT(":article_id", updateArticle)
 	}
 }
 
-func RegisterContent(group *echo.Group) {
-	content := group.Group("/category")
+func RegisterCategory(group *echo.Group) {
+	content := group.Group("category")
 	{
 		content.GET("", getAllCategory)
 		content.POST("", createCategory)
-		content.DELETE("", deleteCategory)
-		content.PUT("", updateCategory)
+		content.DELETE(":category_id", deleteCategory)
+		content.PUT(":category_id", updateCategory)
 	}
 }
 
 func RegisterComment(group *echo.Group) {
-	comment := group.Group("/comment")
+	comment := group.Group("comment")
 	{
-		comment.GET("/:article_id", getAllComment)
-		comment.POST("/:user_name/:article_id/:parent_id", createComment)
-		comment.DELETE("/:user_name/:comment_id", deleteComment)
+		comment.GET(":article_id", getAllComment)
+		comment.POST("", createComment)
+		comment.DELETE(":comment_id", deleteComment)
 	}
 }
 
 func RegisterRole(group *echo.Group) {
-	role := group.Group("/role")
+	role := group.Group("role")
 	{
 		role.POST("", addRoleAuth)
-		role.DELETE("", deleteRoleAuth)
+		role.DELETE(":role_id", deleteRoleAuth)
 		role.GET("", getAllRoleAuth)
-		role.GET("/:role_name", getRoleAuth)
+		role.GET(":role_name", getRoleAuth)
 	}
 }
 

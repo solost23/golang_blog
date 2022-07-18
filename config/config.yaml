@@ -5,3 +5,5 @@ mysql:
   username: root
   password: 123
   dbname: golang_blog
+  charset: utf8
+  parse_time: true

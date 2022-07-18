@@ -1,10 +1,11 @@
 package router
 
 import (
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 
 	"golang_blog/models"
-	"golang_blog/mysql"
 	"golang_blog/workList"
 )
 
@@ -17,17 +18,18 @@ import (
 // @Success 200
 // @Router /comment/{article_id} [get]
 func getAllComment(c echo.Context) error {
-	articleID := c.Param("article_id")
-	c.Set("article_id", articleID)
-	var comment models.Comment
-	var commentList []*models.Comment
-	var DB = mysql.DB
-	commentList, err := workList.NewWorkList(c, DB).GetAllComment(&comment)
+	articleIdStr := c.Param("article_id")
+	articleId, err := strconv.Atoi(articleIdStr)
 	if err != nil {
 		Render(c, err)
 		return err
 	}
-	Render(c, nil, commentList)
+	comments, err := workList.NewWorkList().GetAllComment(c, int32(articleId))
+	if err != nil {
+		Render(c, err)
+		return err
+	}
+	Render(c, nil, comments)
 	return nil
 }
 
@@ -39,21 +41,15 @@ func getAllComment(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /comment/{user_name}/{article_id}/{parent_id} [post]
+// @Router /comment [post]
 func createComment(c echo.Context) error {
-	userName := c.Param("user_name")
-	articleID := c.Param("article_id")
-	parentID := c.Param("parent_id")
-	c.Set("user_name", userName)
-	c.Set("article_id", articleID)
-	c.Set("parent_id", parentID)
-	var comment models.Comment
+	var comment = new(models.Comment)
 	if err := c.Bind(&comment); err != nil {
 		Render(c, err)
 		return err
 	}
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).CreateComment(&comment); err != nil {
+	err := workList.NewWorkList().CreateComment(c, comment)
+	if err != nil {
 		Render(c, err)
 		return err
 	}
@@ -70,13 +66,14 @@ func createComment(c echo.Context) error {
 // @Success 200
 // @Router /comment/{comment_id} [delete]
 func deleteComment(c echo.Context) error {
-	userName := c.Param("user_name")
-	commentID := c.Param("comment_id")
-	c.Set("user_name", userName)
-	c.Set("comment_id", commentID)
-	var comment = new(models.Comment)
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).DeleteComment(comment); err != nil {
+	commentIdStr := c.Param("comment_id")
+	commentId, err := strconv.Atoi(commentIdStr)
+	if err != nil {
+		Render(c, err)
+		return err
+	}
+	err = workList.NewWorkList().DeleteComment(c, int32(commentId))
+	if err != nil {
 		Render(c, err)
 		return err
 	}

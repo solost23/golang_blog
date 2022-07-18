@@ -2,33 +2,37 @@ package workList
 
 import (
 	"errors"
+	"golang_blog/middleware/jwt"
 	"strings"
+
+	"github.com/labstack/echo/v4"
 
 	"gorm.io/gorm"
 
 	"golang_blog/models"
 )
 
-func (w *WorkList) CreateArticle(articleParam *models.Article) error {
+func (w *WorkList) CreateArticle(c echo.Context, articleParam *models.Article) error {
 	// base logic: 查询用户 && 查询分类是否存在, 如果都存在，那么新建
+	user := jwt.GetUser(c)
 	query := []string{"user_id = ?", "category_id = ?"}
-	args := []interface{}{articleParam.UserID, articleParam.CategoryID}
+	args := []interface{}{user.Id, articleParam.CategoryID}
 	_, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
-	err = models.NewArticle().Insert(articleParam)
+	err = articleParam.Insert()
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (w *WorkList) DeleteArticle(articleParam *models.Article) error {
+func (w *WorkList) DeleteArticle(_ echo.Context, id int32) error {
 	// base login: 查询文章是否存在，不存在则报错
 	// 存在则删除
 	query := []string{"id = ?"}
-	args := []interface{}{articleParam.ID}
+	args := []interface{}{id}
 	_, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
@@ -40,22 +44,22 @@ func (w *WorkList) DeleteArticle(articleParam *models.Article) error {
 	return nil
 }
 
-func (w *WorkList) UpdateArticle(articleParam *models.Article) error {
+func (w *WorkList) UpdateArticle(_ echo.Context, id int32, articleParam *models.Article) error {
 	// 查看有无此文章，有则更新
 	query := []string{"id = ?"}
-	args := []interface{}{articleParam.ID}
+	args := []interface{}{id}
 	_, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
-	err = models.NewArticle().Save(articleParam, strings.Join(query, " AND "), args...)
+	err = articleParam.Save(strings.Join(query, " AND "), args...)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (w *WorkList) GetAllArticle(articleParam *models.Article) ([]*models.Article, error) {
+func (w *WorkList) GetAllArticle(_ echo.Context) ([]*models.Article, error) {
 	// 直接查询
 	query := []string{"1 = ?"}
 	args := []interface{}{1}
@@ -66,10 +70,10 @@ func (w *WorkList) GetAllArticle(articleParam *models.Article) ([]*models.Articl
 	return articleList.([]*models.Article), nil
 }
 
-func (w *WorkList) GetArticle(articleParam *models.Article) (*models.Article, error) {
+func (w *WorkList) GetArticle(_ echo.Context, id int32) (*models.Article, error) {
 	// 直接查询并返回数据
 	query := []string{"id = ?"}
-	args := []interface{}{articleParam.ID}
+	args := []interface{}{id}
 	article, err := models.NewArticle().WhereOne(strings.Join(query, " AND "), args...)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err

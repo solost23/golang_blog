@@ -1,10 +1,11 @@
 package router
 
 import (
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 
 	"golang_blog/models"
-	"golang_blog/mysql"
 	"golang_blog/workList"
 )
 
@@ -16,17 +17,15 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /article/{category_name} [post]
+// @Router /article [post]
 func createArticle(c echo.Context) error {
-	contentName := c.Param("content_name")
-	c.Set("content_name", contentName)
-	var article models.Article
+	var article = new(models.Article)
 	if err := c.Bind(&article); err != nil {
 		Render(c, err)
 		return err
 	}
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).CreateArticle(&article); err != nil {
+	err := workList.NewWorkList().CreateArticle(c, article)
+	if err != nil {
 		Render(c, err)
 		return err
 	}
@@ -41,15 +40,16 @@ func createArticle(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /article/{content_name}/{article_name} [delete]
+// @Router /article/{article_id} [delete]
 func deleteArticle(c echo.Context) error {
-	contentName := c.Param("content_name")
-	articleName := c.Param("article_name")
-	c.Set("content_name", contentName)
-	c.Set("article_name", articleName)
-	var article models.Article
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).DeleteArticle(&article); err != nil {
+	articleIdStr := c.Param("article_id")
+	articleId, err := strconv.Atoi(articleIdStr)
+	if err != nil {
+		Render(c, err)
+		return err
+	}
+	err = workList.NewWorkList().DeleteArticle(c, int32(articleId))
+	if err != nil {
 		Render(c, err)
 		return err
 	}
@@ -65,19 +65,21 @@ func deleteArticle(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /article/{content_name}/{article_name} [put]
+// @Router /article/{article_id} [put]
 func updateArticle(c echo.Context) error {
-	contentName := c.Param("content_name")
-	articleName := c.Param("article_name")
-	c.Set("content_name", contentName)
-	c.Set("article_name", articleName)
-	var article models.Article
-	if err := c.Bind(&article); err != nil {
+	articleIdStr := c.Param("article_id")
+	articleId, err := strconv.Atoi(articleIdStr)
+	if err != nil {
 		Render(c, err)
-		return nil
+		return err
 	}
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).UpdateArticle(&article); err != nil {
+	var article = new(models.Article)
+	if err = c.Bind(&article); err != nil {
+		Render(c, err)
+		return err
+	}
+	err = workList.NewWorkList().UpdateArticle(c, int32(articleId), article)
+	if err != nil {
 		Render(c, err)
 		return err
 	}
@@ -94,15 +96,12 @@ func updateArticle(c echo.Context) error {
 // @Success 200
 // @Router /article [get]
 func getAllArticle(c echo.Context) error {
-	var article models.Article
-	var articleList []*models.Article
-	var DB = mysql.DB
-	articleList, err := workList.NewWorkList(c, DB).GetAllArticle(&article)
+	articles, err := workList.NewWorkList().GetAllArticle(c)
 	if err != nil {
 		Render(c, err)
 		return err
 	}
-	Render(c, nil, articleList)
+	Render(c, nil, articles)
 	return nil
 }
 
@@ -113,19 +112,19 @@ func getAllArticle(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /article/{user_id}/{category_id}/{article_id} [get]
+// @Router /article/{article_id} [get]
 func getArticle(c echo.Context) error {
-	var articleParam = new(models.Article)
-	if err := c.Bind(&articleParam); err != nil {
-		Render(c, err)
-		return err
-	}
-	var DB = mysql.DB
-	article, err := workList.NewWorkList(c, DB).GetArticle(articleParam)
+	articleIdStr := c.Param("article_id")
+	articleId, err := strconv.Atoi(articleIdStr)
 	if err != nil {
 		Render(c, err)
 		return err
 	}
-	Render(c, nil, article)
+	articles, err := workList.NewWorkList().GetArticle(c, int32(articleId))
+	if err != nil {
+		Render(c, err)
+		return err
+	}
+	Render(c, nil, articles)
 	return nil
 }

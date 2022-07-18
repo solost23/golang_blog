@@ -33,7 +33,7 @@ func main() {
 
 func InitAutoMigrate() {
 	var db = models.DB
-	err := db.AutoMigrate(&models.User{}, &models.Category{}, &models.Article{}, &models.Comment{})
+	err := db.AutoMigrate(&models.User{}, &models.Category{}, &models.Article{}, &models.Comment{}, &models.CasbinModel{})
 	if err != nil {
 		panic(err)
 	}

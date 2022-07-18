@@ -1,10 +1,5 @@
 package workList
 
-import (
-	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
-)
-
 const (
 	NONE    = "NONE"
 	INSERT  = "INSERT"
@@ -18,14 +13,8 @@ const (
 	COMMENT = "COMMENT"
 )
 
-type WorkList struct {
-	conn *gorm.DB
-	ctx  echo.Context
-}
+type WorkList struct{}
 
-func NewWorkList(c echo.Context, conn *gorm.DB) *WorkList {
-	return &WorkList{
-		conn: conn,
-		ctx:  c,
-	}
+func NewWorkList() *WorkList {
+	return &WorkList{}
 }

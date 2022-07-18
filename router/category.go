@@ -2,8 +2,8 @@ package router
 
 import (
 	"golang_blog/models"
-	"golang_blog/mysql"
 	"golang_blog/workList"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,20 +16,18 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /content [post]
+// @Router /category [post]
 func createCategory(c echo.Context) error {
-	//fmt.Println(c.Get("token"))
-	var category models.Category
+	var category = new(models.Category)
 	if err := c.Bind(&category); err != nil {
 		Render(c, err)
 		return err
 	}
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).CreateCategory(&category); err != nil {
+	err := workList.NewWorkList().CreateCategory(c, category)
+	if err != nil {
 		Render(c, err)
 		return err
 	}
-	Render(c, nil)
 	return nil
 }
 
@@ -40,15 +38,21 @@ func createCategory(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /content [delete]
+// @Router /category/{category_id} [delete]
 func deleteCategory(c echo.Context) error {
-	var category models.Category
-	if err := c.Bind(&category); err != nil {
+	categoryIdStr := c.Param("category_id")
+	categoryId, err := strconv.Atoi(categoryIdStr)
+	if err != nil {
 		Render(c, err)
 		return err
 	}
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).DeleteCategory(&category); err != nil {
+	var category = new(models.Category)
+	if err = c.Bind(&category); err != nil {
+		Render(c, err)
+		return err
+	}
+	err = workList.NewWorkList().DeleteCategory(c, int32(categoryId))
+	if err != nil {
 		Render(c, err)
 		return err
 	}
@@ -64,15 +68,21 @@ func deleteCategory(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /content [put]
+// @Router /category/{category_id} [put]
 func updateCategory(c echo.Context) error {
-	var category models.Category
-	if err := c.Bind(&category); err != nil {
+	categoryIdStr := c.Param("category_id")
+	categoryId, err := strconv.Atoi(categoryIdStr)
+	if err != nil {
 		Render(c, err)
 		return err
 	}
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).UpdateCategory(&category); err != nil {
+	var category = new(models.Category)
+	if err = c.Bind(&category); err != nil {
+		Render(c, err)
+		return err
+	}
+	err = workList.NewWorkList().UpdateCategory(c, int32(categoryId), category)
+	if err != nil {
 		Render(c, err)
 		return err
 	}
@@ -87,16 +97,13 @@ func updateCategory(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /content [get]
+// @Router /category [get]
 func getAllCategory(c echo.Context) error {
-	var content models.Category
-	var contentList []*models.Category
-	var DB = mysql.DB
-	contentList, err := workList.NewWorkList(c, DB).GetAllCategory(&content)
+	categories, err := workList.NewWorkList().GetAllCategory(c)
 	if err != nil {
 		Render(c, err)
 		return err
 	}
-	Render(c, nil, contentList)
+	Render(c, nil, categories)
 	return nil
 }

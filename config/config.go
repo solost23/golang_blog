@@ -7,20 +7,24 @@ import (
 )
 
 type Mysql struct {
-	UserName string
-	Password string
-	Host     string
-	Ip       string
-	DBName   string
+	UserName  string
+	Password  string
+	Host      string
+	Ip        string
+	DBName    string
+	Charset   string
+	ParseTime string
 }
 
-func NewMysql(userName, password, host, ip, dbName string) *Mysql {
+func NewMysql(userName, password, host, ip, dbName, charset, parseTime string) *Mysql {
 	return &Mysql{
-		UserName: userName,
-		Password: password,
-		Host:     host,
-		Ip:       ip,
-		DBName:   dbName,
+		UserName:  userName,
+		Password:  password,
+		Host:      host,
+		Ip:        ip,
+		DBName:    dbName,
+		Charset:   charset,
+		ParseTime: parseTime,
 	}
 }
 
@@ -35,7 +39,9 @@ func GetMysqlConfig() *Mysql {
 	host := viper.GetStringMapString("mysql")["host"]
 	ip := viper.GetStringMapString("mysql")["ip"]
 	dbname := viper.GetStringMapString("mysql")["dbname"]
+	charset := viper.GetStringMapString("mysql")["charset"]
+	parseTime := viper.GetStringMapString("mysql")["parse_time"]
 	//fmt.Println(username, password, host, ip, dbname)
-	mysql := NewMysql(username, password, host, ip, dbname)
+	mysql := NewMysql(username, password, host, ip, dbname, charset, parseTime)
 	return mysql
 }

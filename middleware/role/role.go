@@ -14,7 +14,7 @@ import (
 
 func AuthCheckRole(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		claims := c.Get("claims").(*jwt.Claims)
+		claims := c.Get("user").(*jwt.Claims)
 		role := claims.Role
 		mysqlConfig := config.GetMysqlConfig()
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/", mysqlConfig.UserName, mysqlConfig.Password, mysqlConfig.Host, mysqlConfig.Ip)

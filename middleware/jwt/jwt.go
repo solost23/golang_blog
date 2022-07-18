@@ -2,9 +2,8 @@ package jwt
 
 import (
 	"net/http"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -28,8 +27,7 @@ func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, "token err valid")
 			return err
 		}
-		c.Set("token", claims.UserName)
-		c.Set("claims", claims)
+		c.Set("user", claims)
 		next(c)
 		return nil
 	}
@@ -38,19 +36,18 @@ func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
 var jwtKey = []byte("my_secret_key")
 
 type Claims struct {
+	Id       int32
 	UserName string
 	Role     string
 	jwt.StandardClaims
 }
 
-func CreateToken(userName, role string) (string, error) {
-	expirationTime := time.Now().Add(5 * time.Minute)
+func CreateToken(userId int32, userName, role string) (string, error) {
 	claims := &Claims{
-		UserName: userName,
-		Role:     role,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
+		Id:             userId,
+		UserName:       userName,
+		Role:           role,
+		StandardClaims: jwt.StandardClaims{},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
@@ -58,4 +55,8 @@ func CreateToken(userName, role string) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func GetUser(c echo.Context) *Claims {
+	return c.Get("user").(*Claims)
 }

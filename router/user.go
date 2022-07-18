@@ -2,12 +2,12 @@ package router
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
 
 	"golang_blog/models"
-	"golang_blog/mysql"
 	"golang_blog/workList"
 )
 
@@ -25,8 +25,7 @@ func reg(c echo.Context) error {
 		Render(c, err)
 		return err
 	}
-	var DB = mysql.DB
-	err := workList.NewWorkList(c, DB).Reg(&user)
+	err := workList.NewWorkList().Reg(c, &user)
 	if err != nil {
 		Render(c, err)
 		return err
@@ -49,8 +48,7 @@ func login(c echo.Context) error {
 	if err := c.Bind(&user); err != nil {
 		return err
 	}
-	var DB = mysql.DB
-	token, err := workList.NewWorkList(c, DB).Login(&user)
+	token, err := workList.NewWorkList().Login(c, &user)
 	if err != nil {
 		Render(c, err)
 		return err
@@ -73,17 +71,20 @@ func login(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /user/{user_name} [put]
+// @Router /user/{id} [put]
 func updateUser(c echo.Context) error {
-	userName := c.Param("user_name")
-	c.Set("user_name", userName)
-	var user models.User
-	if err := c.Bind(&user); err != nil {
+	idString := c.Param("user_id")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
 		Render(c, err)
 		return err
 	}
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).UpdateUser(&user); err != nil {
+	var user = new(models.User)
+	if err = c.Bind(&user); err != nil {
+		Render(c, err)
+		return err
+	}
+	if err = workList.NewWorkList().UpdateUser(c, int32(id), user); err != nil {
 		Render(c, err)
 		return err
 	}
@@ -98,15 +99,20 @@ func updateUser(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /user [delete]
+// @Router /user/{id} [delete]
 func deleteUser(c echo.Context) error {
-	var userParam = new(models.User)
-	if err := c.Bind(&userParam); err != nil {
+	idString := c.Param("user_id")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
 		Render(c, err)
 		return err
 	}
-	var DB = mysql.DB
-	if err := workList.NewWorkList(c, DB).DeleteUser(userParam); err != nil {
+	var userParam = new(models.User)
+	if err = c.Bind(&userParam); err != nil {
+		Render(c, err)
+		return err
+	}
+	if err = workList.NewWorkList().DeleteUser(c, int32(id)); err != nil {
 		Render(c, err)
 		return err
 	}
